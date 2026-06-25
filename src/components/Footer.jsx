@@ -4,7 +4,7 @@ import { FiGithub, FiLinkedin, FiMail, FiShield } from 'react-icons/fi'
 
 export const Footer = () => {
   return (
-    <footer className="bg-card/30 dark:bg-card/30 border-t border-muted/10 transition-colors duration-300">
+    <footer className="bg-slate-100 dark:bg-card/30 border-t border-muted/10 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           

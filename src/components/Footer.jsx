@@ -27,9 +27,6 @@ export const Footer = () => {
             <p className="text-sm text-muted">
               Built under IBM CSRBOX Cybersecurity Internship 2026.
             </p>
-            <p className="text-sm text-muted">
-              Dr. S. & S.S. Ghandhy college of Engg. & Tech. & IBM CSRBOX
-            </p>
           </div>
 
           {/* Col 3: Developer Info */}

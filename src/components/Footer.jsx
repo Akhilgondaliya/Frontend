@@ -25,7 +25,7 @@ export const Footer = () => {
           <div className="space-y-2">
             <h4 className="text-sm font-bold uppercase tracking-wider text-accent">IBM CSRBOX Project 2026</h4>
             <p className="text-sm text-muted">
-              Built under IBM CSRBOX Cybersecurity Internship 2026.
+              Built as part of IBM CSRBOX Cybersecurity Internship 2026.
             </p>
           </div>
 

@@ -34,11 +34,20 @@ export const apiSlice = createApi({
         },
       }),
     }),
+    // POST /api/scan-mail -> Body: { sender, subject, body }
+    scanMail: builder.mutation({
+      query: (body) => ({
+        url: '/api/scan-mail',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 })
 
 export const { 
   useScanUrlMutation, 
   useScanQrMutation,
+  useScanMailMutation,
   useLazyDownloadReportQuery
 } = apiSlice

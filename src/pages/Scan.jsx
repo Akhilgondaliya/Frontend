@@ -24,34 +24,39 @@ export const Scan = () => {
   const [scanQr, { isLoading: isQrScanning }] = useScanQrMutation()
 
   const requestRef = useRef(null)
+  const lastScanTimeRef = useRef(0)
 
-  // Real-time camera QR decoding loop
-  const scanFrame = () => {
-    if (!videoRef.current || videoRef.current.readyState !== videoRef.current.HAVE_ENOUGH_DATA) {
-      requestRef.current = requestAnimationFrame(scanFrame)
-      return
-    }
+  // Real-time camera QR decoding loop (throttled to 5 scans per second for smooth 60 FPS video preview)
+  const scanFrame = (timestamp) => {
+    if (!videoRef.current) return
 
-    try {
-      const canvas = document.createElement('canvas')
-      canvas.width = videoRef.current.videoWidth || 640
-      canvas.height = videoRef.current.videoHeight || 480
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
-      
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: 'dontInvert',
-      })
+    // Run QR decoding every 200ms (5 times per second) to keep preview running at maximum native FPS
+    if (timestamp - lastScanTimeRef.current >= 200) {
+      lastScanTimeRef.current = timestamp
 
-      if (code && code.data && code.data.trim()) {
-        const decodedUrl = code.data.trim()
-        stopCamera()
-        handleDecodedUrl(decodedUrl)
-        return // Stop looping
+      if (videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
+        try {
+          const canvas = document.createElement('canvas')
+          canvas.width = videoRef.current.videoWidth || 640
+          canvas.height = videoRef.current.videoHeight || 480
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
+          
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'dontInvert',
+          })
+
+          if (code && code.data && code.data.trim()) {
+            const decodedUrl = code.data.trim()
+            stopCamera()
+            handleDecodedUrl(decodedUrl)
+            return // Stop looping
+          }
+        } catch (err) {
+          console.error("Frame scanning error:", err)
+        }
       }
-    } catch (err) {
-      console.error("Frame scanning error:", err)
     }
 
     requestRef.current = requestAnimationFrame(scanFrame)

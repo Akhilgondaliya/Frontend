@@ -7,7 +7,7 @@ import { useScanUrlMutation, useScanQrMutation } from '../app/apiSlice'
 import LoadingSpinner from '../components/LoadingSpinner'
 import SampleSection from '../components/SampleSection'
 
-export const Demo = () => {
+export const Scan = () => {
   const navigate = useNavigate()
   const [urlInput, setUrlInput] = useState('')
   const [qrFile, setQrFile] = useState(null)
@@ -354,4 +354,4 @@ export const Demo = () => {
     </div>
   )
 }
-export default Demo
+export default Scan

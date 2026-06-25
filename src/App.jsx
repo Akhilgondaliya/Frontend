@@ -10,7 +10,7 @@ import ScrollProgress from './components/ScrollProgress'
 import MarqueeBanner from './components/MarqueeBanner'
 
 import Home from './pages/Home'
-import Demo from './pages/Demo'
+import Scan from './pages/Scan'
 import Result from './pages/Result'
 import HowItWorks from './pages/HowItWorks'
 import About from './pages/About'
@@ -39,7 +39,7 @@ export const App = () => {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/scan" element={<Demo />} />
+            <Route path="/scan" element={<Scan />} />
             <Route path="/result" element={<Result />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/about" element={<About />} />

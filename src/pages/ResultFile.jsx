@@ -4,6 +4,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { motion } from 'framer-motion'
 import { FiArrowLeft, FiAlertTriangle, FiCheckCircle, FiShield, FiFileText, FiLink, FiInfo, FiActivity, FiDownload } from 'react-icons/fi'
+import RiskMeter from '../components/RiskMeter'
 
 export const ResultFile = () => {
   const location = useLocation()
@@ -158,10 +159,7 @@ export const ResultFile = () => {
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted">Analysis Verdict</h3>
             
             <div className="flex justify-center">
-              <div className={`w-36 h-36 rounded-full border-4 ${ringColor} flex flex-col items-center justify-center relative shadow-inner`}>
-                <span className="text-3xl font-extrabold tracking-tight">{score}</span>
-                <span className="text-[10px] text-muted font-bold tracking-wide">RISK SCORE</span>
-              </div>
+              <RiskMeter score={score} borderless={true} />
             </div>
 
             <div className={`p-4 rounded-2xl border ${themeColor} flex items-center justify-center space-x-2.5`}>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { motion } from 'framer-motion'
 import { ThemeContext } from '../context/ThemeContext'
 
-export const RiskMeter = ({ score = 0 }) => {
+export const RiskMeter = ({ score = 0, borderless = false }) => {
   const [displayScore, setDisplayScore] = useState(0)
   const { theme } = useContext(ThemeContext)
   const isDark = theme === 'dark'
@@ -54,7 +54,10 @@ export const RiskMeter = ({ score = 0 }) => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-card border border-muted/20 rounded-3xl shadow-md w-full max-w-[260px] mx-auto">
+    <div className={borderless
+      ? "flex flex-col items-center justify-center w-full max-w-[260px] mx-auto"
+      : "flex flex-col items-center justify-center p-6 bg-card border border-muted/20 rounded-3xl shadow-md w-full max-w-[260px] mx-auto"
+    }>
       <div className="relative" style={{ width: size, height: size }}>
         
         {/* SVG Circle Gauge */}

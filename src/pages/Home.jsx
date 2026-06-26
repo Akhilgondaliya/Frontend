@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FiShield, FiLink, FiCamera, FiLock, FiCalendar, FiFileText, FiArrowRight } from 'react-icons/fi'
+import { FiShield, FiLink, FiCamera, FiLock, FiCalendar, FiFileText, FiArrowRight, FiMail, FiCpu } from 'react-icons/fi'
 import FeatureCard from '../components/FeatureCard'
 
 // Helper component for counting numbers up on load
@@ -234,6 +234,16 @@ export const Home = () => {
             icon={FiCamera}
           />
           <FeatureCard
+            title="Email Threat Sandbox"
+            description="Analyze sender domains, scan email text for urgency keywords, and verify display redirects for phishing threat indicators."
+            icon={FiMail}
+          />
+          <FeatureCard
+            title="APK & Image Sandbox"
+            description="Decompile APK archives for high-risk permissions and check raw images for hidden steganographic URLs."
+            icon={FiCpu}
+          />
+          <FeatureCard
             title="SSL Connection Audit"
             description="We test the site's secure handshake connection, check who issued the certificate, and alert you if it is about to expire."
             icon={FiLock}
@@ -250,7 +260,7 @@ export const Home = () => {
           />
           <FeatureCard
             title="PDF Report Creator"
-            description="Save a clean, printable PDF report containing details of the threat signals to share with your friends or team."
+            description="Save or generate a clean, printable PDF report containing threat details for Website, Email, and File scans."
             icon={FiFileText}
           />
         </motion.div>
@@ -269,22 +279,22 @@ export const Home = () => {
             {/* Step 1 */}
             <div className="p-6 bg-card border border-muted/20 rounded-2xl text-center space-y-2">
               <span className="text-xs uppercase font-extrabold text-accent bg-accent/10 px-2 py-0.5 rounded-full">Step 1</span>
-              <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Submit a Link or QR</h3>
-              <p className="text-xs text-muted">Paste any link you're unsure about, drop a QR image, or scan it live with your webcam.</p>
+              <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Submit Link, Mail or File</h3>
+              <p className="text-xs text-muted">Paste links, enter email contents, or upload APKs and images in our sandboxed environment.</p>
             </div>
 
             {/* Step 2 */}
             <div className="p-6 bg-card border border-muted/20 rounded-2xl text-center space-y-2">
               <span className="text-xs uppercase font-extrabold text-accent bg-accent/10 px-2 py-0.5 rounded-full">Step 2</span>
-              <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Let Us Do the Checking</h3>
-              <p className="text-xs text-muted">We fetch the website's SSL details, run a WHOIS check, and evaluate the domain structure.</p>
+              <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Let Us Sandbox Check</h3>
+              <p className="text-xs text-muted">We query WHOIS data, trace SSL chains, inspect email body keywords, and dissect APK manifests.</p>
             </div>
 
             {/* Step 3 */}
             <div className="p-6 bg-card border border-muted/20 rounded-2xl text-center space-y-2">
               <span className="text-xs uppercase font-extrabold text-accent bg-accent/10 px-2 py-0.5 rounded-full">Step 3</span>
-              <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Get a Clear Verdict</h3>
-              <p className="text-xs text-muted">Instantly see if the site is Safe, Suspicious, or a Phishing risk with a clean PDF report.</p>
+              <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Download PDF Report</h3>
+              <p className="text-xs text-muted">Review full threat summaries on-screen and instantly download or save a professional PDF report.</p>
             </div>
 
           </div>

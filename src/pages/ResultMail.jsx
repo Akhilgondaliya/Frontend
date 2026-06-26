@@ -1,12 +1,62 @@
 import React from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { motion } from 'framer-motion'
-import { FiArrowLeft, FiAlertTriangle, FiCheckCircle, FiShield, FiMail, FiLink, FiInfo, FiFileText } from 'react-icons/fi'
+import { FiArrowLeft, FiAlertTriangle, FiCheckCircle, FiShield, FiMail, FiLink, FiInfo, FiFileText, FiDownload } from 'react-icons/fi'
 
 export const ResultMail = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const scanResult = location.state?.scanResult
+
+  const handleDownloadPdf = async () => {
+    let fileHandle = null
+    try {
+      if (window.showSaveFilePicker) {
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: `phishzero_mail_report_${Date.now()}.pdf`,
+          types: [{
+            description: 'PDF Document',
+            accept: {
+              'application/pdf': ['.pdf']
+            }
+          }]
+        })
+      }
+
+      toast.info('Generating PDF report from sandbox...')
+      const postUrl = `${import.meta.env.VITE_API_URL || ''}/api/report`
+      const response = await fetch(postUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(scanResult)
+      })
+      if (!response.ok) throw new Error('API server failed to generate PDF')
+      const blob = await response.blob()
+
+      if (fileHandle) {
+        const writable = await fileHandle.createWritable()
+        await writable.write(blob)
+        await writable.close()
+        toast.success('Report saved successfully!')
+      } else {
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.setAttribute('download', `phishzero_mail_report_${Date.now()}.pdf`)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        toast.success('Report downloaded to default folder.')
+      }
+    } catch (err) {
+      console.error(err)
+      if (err.name !== 'AbortError') {
+        toast.error('Failed to download PDF report. Make sure the backend is active.')
+      }
+    }
+  }
 
   if (!scanResult) {
     return (
@@ -82,15 +132,27 @@ export const ResultMail = () => {
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="space-y-2">
-        <span className="text-xs font-extrabold uppercase tracking-widest text-accent flex items-center space-x-1.5">
-          <FiMail className="w-3.5 h-3.5" />
-          <span>Email Security Audit</span>
-        </span>
-        <h1 className="text-3xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white">
-          Email Threat Intelligence Report
-        </h1>
+      {/* Header & Actions */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-muted/20 pb-6">
+        <div className="space-y-2">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-accent flex items-center space-x-1.5">
+            <FiMail className="w-3.5 h-3.5" />
+            <span>Email Security Audit</span>
+          </span>
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white">
+            Email Threat Intelligence Report
+          </h1>
+        </div>
+        <div className="flex items-center gap-3 self-stretch sm:self-auto justify-end">
+          <button
+            onClick={handleDownloadPdf}
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-accent text-primary dark:text-primary font-bold text-xs tracking-wider hover:bg-accent/80 transition-colors shadow-md shadow-accent/15 cursor-pointer"
+            id="download-report-btn"
+          >
+            <FiDownload className="w-4 h-4" />
+            <span>Download PDF Report</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

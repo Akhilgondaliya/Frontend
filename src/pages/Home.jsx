@@ -87,7 +87,7 @@ export const Home = () => {
   const findsThemCount = Math.max(0, line2Count - phishZeroLen)
 
   return (
-    <div className="min-h-screen grid-bg overflow-x-hidden flex flex-col justify-between">
+    <div className="min-h-screen overflow-x-hidden flex flex-col justify-between relative">
       
       {/* Hero Section */}
       <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center py-16 sm:py-24">
@@ -160,7 +160,7 @@ export const Home = () => {
               <div className="absolute w-72 h-72 sm:w-80 sm:h-80 bg-accent/10 dark:bg-accent/5 rounded-full filter blur-3xl animate-pulse" />
               
               {/* Floating holographic card container */}
-              <div className="relative p-8 rounded-3xl bg-card border border-muted/20 shadow-2xl flex flex-col items-center justify-center text-center max-w-[280px]">
+              <div className="relative p-8 rounded-3xl bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/15 shadow-2xl flex flex-col items-center justify-center text-center max-w-[280px]">
                 <div className="p-5 rounded-2xl bg-accent/10 border border-accent/20 mb-4">
                   <FiShield className="w-16 h-16 text-accent" />
                 </div>
@@ -174,7 +174,7 @@ export const Home = () => {
       </section>
 
       {/* Stats Bar */}
-      <section className="border-y border-muted/20 bg-card/25 dark:bg-card/25 py-8 transition-colors duration-300">
+      <section className="border-y border-muted/20 bg-card/40 dark:bg-card/20 backdrop-blur-sm py-8 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="space-y-1">
@@ -277,21 +277,21 @@ export const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative items-center">
             
             {/* Step 1 */}
-            <div className="p-6 bg-card border border-muted/20 rounded-2xl text-center space-y-2">
+            <div className="p-6 bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-muted/10 rounded-2xl text-center space-y-2 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
               <span className="text-xs uppercase font-extrabold text-accent bg-accent/10 px-2 py-0.5 rounded-full">Step 1</span>
               <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Submit Link, Mail or File</h3>
               <p className="text-xs text-muted">Paste links, enter email contents, or upload APKs and images in our sandboxed environment.</p>
             </div>
 
             {/* Step 2 */}
-            <div className="p-6 bg-card border border-muted/20 rounded-2xl text-center space-y-2">
+            <div className="p-6 bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-muted/10 rounded-2xl text-center space-y-2 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
               <span className="text-xs uppercase font-extrabold text-accent bg-accent/10 px-2 py-0.5 rounded-full">Step 2</span>
               <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Let Us Sandbox Check</h3>
               <p className="text-xs text-muted">We query WHOIS data, trace SSL chains, inspect email body keywords, and dissect APK manifests.</p>
             </div>
 
             {/* Step 3 */}
-            <div className="p-6 bg-card border border-muted/20 rounded-2xl text-center space-y-2">
+            <div className="p-6 bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-muted/10 rounded-2xl text-center space-y-2 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
               <span className="text-xs uppercase font-extrabold text-accent bg-accent/10 px-2 py-0.5 rounded-full">Step 3</span>
               <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Download PDF Report</h3>
               <p className="text-xs text-muted">Review full threat summaries on-screen and instantly download or save a professional PDF report.</p>
@@ -320,26 +320,26 @@ export const Home = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          <div className="p-8 bg-card border border-muted/20 rounded-3xl space-y-3 relative hover:scale-102 transition-transform duration-300">
+          <div className="p-8 bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-muted/10 rounded-3xl space-y-3 relative hover:scale-[1.03] hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
             <span className="text-5xl">📧</span>
             <h3 className="text-xl font-extrabold text-[#0d1b2a] dark:text-white">They Land in Your Inbox</h3>
-            <p className="text-xs text-muted leading-relaxed">
+            <p className="text-xs text-muted leading-relaxed font-semibold">
               Standard email filters miss a huge portion of phishing links. Statistically, 1 out of every 99 emails delivered contains a malicious target link.
             </p>
           </div>
 
-          <div className="p-8 bg-card border border-muted/20 rounded-3xl space-y-3 relative hover:scale-102 transition-transform duration-300">
+          <div className="p-8 bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-muted/10 rounded-3xl space-y-3 relative hover:scale-[1.03] hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
             <span className="text-5xl">📷</span>
             <h3 className="text-xl font-extrabold text-[#0d1b2a] dark:text-white">QR Codes Are the New Target</h3>
-            <p className="text-xs text-muted leading-relaxed">
+            <p className="text-xs text-muted leading-relaxed font-semibold">
               Scammers love QR codes because filters can't read links inside images. QR phishing (also known as quishing) has grown by 587% recently.
             </p>
           </div>
 
-          <div className="p-8 bg-card border border-muted/20 rounded-3xl space-y-3 relative hover:scale-102 transition-transform duration-300">
+          <div className="p-8 bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-muted/10 rounded-3xl space-y-3 relative hover:scale-[1.03] hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
             <span className="text-5xl">⌛</span>
             <h3 className="text-xl font-extrabold text-[#0d1b2a] dark:text-white">They Vanish Quickly</h3>
-            <p className="text-xs text-muted leading-relaxed">
+            <p className="text-xs text-muted leading-relaxed font-semibold">
               The average phishing page stays online for less than 5 hours to avoid security blocks. Static database blacklists just can't keep up.
             </p>
           </div>

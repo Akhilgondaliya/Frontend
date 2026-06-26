@@ -7,7 +7,7 @@ export const SampleSection = ({ onSelectUrl }) => {
   const qrEndpoint = `${import.meta.env.VITE_API_URL || ''}/api/sample-qr`
 
   return (
-    <section className="bg-card dark:bg-card border border-muted/10 rounded-3xl p-6 sm:p-8 space-y-6">
+    <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
       
       <div className="flex items-center space-x-2 border-b border-muted/5 pb-4">
         <FiInfo className="w-5 h-5 text-accent" />
@@ -44,7 +44,7 @@ export const SampleSection = ({ onSelectUrl }) => {
         </div>
 
         {/* Right Col: QR testing info */}
-        <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-primary/40 rounded-2xl border border-muted/5">
+        <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-primary/20 dark:bg-card/30 backdrop-blur-sm rounded-2xl border border-muted/15 dark:border-accent/5">
           <div className="flex flex-col items-center space-y-2">
             <img
               src={qrEndpoint}

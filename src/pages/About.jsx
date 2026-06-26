@@ -20,7 +20,7 @@ export const About = () => {
       </div>
 
       {/* Project Card Section */}
-      <section className="bg-card dark:bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-8 shadow-md">
+      <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-8 shadow-xl hover:shadow-lg hover:shadow-accent/5 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
         
         {/* Animated Shield Logo */}
         <motion.div
@@ -69,7 +69,7 @@ export const About = () => {
           <p className="text-xs text-muted">The developer behind this project.</p>
         </div>
 
-        <div className="p-6 sm:p-8 bg-card dark:bg-card border border-muted/20 rounded-3xl flex flex-col sm:flex-row items-center gap-6 shadow-md">
+        <div className="p-6 sm:p-8 bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl flex flex-col sm:flex-row items-center gap-6 shadow-xl hover:shadow-lg hover:shadow-accent/5 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
           {/* Avatar Circle with initials */}
           <div className="w-20 h-20 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent text-2xl font-extrabold shadow-inner font-mono flex-shrink-0 animate-pulse">
             AG
@@ -103,7 +103,7 @@ export const About = () => {
 
 
       {/* Academic Disclaimer footer block */}
-      <div className="p-4 rounded-xl border border-muted/20 text-center bg-card/20 text-xs text-muted">
+      <div className="p-4 rounded-xl border border-muted/20 dark:border-accent/5 text-center bg-card/40 dark:bg-card/25 backdrop-blur-sm text-xs text-muted font-semibold">
         ⚠️ <b>Internship Notice:</b> Developed as part of IBM CSRBOX Cybersecurity Internship 2026. All sandboxed audits are simulated.
       </div>
 

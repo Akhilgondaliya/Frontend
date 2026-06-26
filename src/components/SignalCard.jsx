@@ -9,10 +9,10 @@ export const SignalCard = ({ signal, index = 0 }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      className={`p-5 rounded-2xl border transition-all duration-300 flex flex-col justify-between h-full bg-card dark:bg-card ${
+      className={`p-5 rounded-2xl border transition-all duration-300 flex flex-col justify-between h-full backdrop-blur-md ${
         triggered
-          ? 'border-phishing/40 bg-phishing/5 shadow-md shadow-phishing/5'
-          : 'border-muted/30 hover:border-accent/40'
+          ? 'border-phishing/40 bg-phishing/10 dark:bg-phishing/5 shadow-md shadow-phishing/5'
+          : 'bg-card/65 dark:bg-card/45 border-muted/20 dark:border-muted/10 hover:border-accent/45 hover:scale-[1.01] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/5'
       }`}
     >
       <div className="space-y-2">

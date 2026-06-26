@@ -109,7 +109,7 @@ export const Quiz = () => {
       </div>
 
       <div className="w-full">
-        <section className="bg-card border border-muted/20 rounded-3xl p-6 sm:p-10 shadow-md">
+        <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden">
           
           {!quizStarted ? (
             /* Intro Block */
@@ -172,14 +172,14 @@ export const Quiz = () => {
                     }
                     
                     return (
-                      <div key={idx} className="p-4 bg-primary/10 border border-muted/5 rounded-2xl text-xs space-y-1.5">
+                      <div key={idx} className="p-4 bg-primary/20 dark:bg-card/30 backdrop-blur-sm border border-muted/15 dark:border-accent/5 rounded-2xl text-xs space-y-1.5 hover:border-accent/30 transition-colors">
                         <div className="flex justify-between items-start gap-2">
                           <span className="font-bold text-[#0d1b2a] dark:text-white">Scenario {idx+1}: {q.question}</span>
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex-shrink-0 ${flagColor}`}>
                             {label}
                           </span>
                         </div>
-                        <p className="text-muted leading-relaxed font-medium">
+                        <p className="text-muted leading-relaxed font-semibold">
                           {q.options.find((_, oIdx) => q.options[oIdx].risk === score)?.feedback || q.options[0].feedback}
                         </p>
                       </div>
@@ -218,16 +218,16 @@ export const Quiz = () => {
                 <div className="grid grid-cols-1 gap-3">
                   {QUESTIONS[currentIdx].options.map((opt, oIdx) => {
                     const isSelected = selectedOpt === oIdx
-                    let optionBorder = 'border-muted/20 hover:border-accent/40 bg-primary/20'
+                    let optionBorder = 'border-muted/25 hover:border-accent/45 bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 hover:scale-[1.01] hover:-translate-y-0.5'
                     if (selectedOpt !== null) {
                       if (isSelected) {
                         optionBorder = opt.risk === 0 
-                          ? 'border-safe bg-safe/5 text-safe' 
+                          ? 'border-safe bg-safe/10 dark:bg-safe/5 text-safe' 
                           : opt.risk >= 20 
-                          ? 'border-phishing bg-phishing/5 text-phishing' 
-                          : 'border-suspicious bg-suspicious/5 text-suspicious'
+                          ? 'border-phishing bg-phishing/10 dark:bg-phishing/5 text-phishing' 
+                          : 'border-suspicious bg-suspicious/10 dark:bg-suspicious/5 text-suspicious'
                       } else {
-                        optionBorder = 'border-muted/10 opacity-40 bg-primary/10'
+                        optionBorder = 'border-muted/10 opacity-40 bg-primary/5 dark:bg-primary/10'
                       }
                     }
                     
@@ -236,7 +236,7 @@ export const Quiz = () => {
                         key={oIdx}
                         onClick={() => handleOptionSelect(oIdx)}
                         disabled={selectedOpt !== null}
-                        className={`w-full text-left p-4 rounded-2xl border text-xs sm:text-sm font-semibold transition-all ${optionBorder} ${selectedOpt === null ? 'cursor-pointer' : 'cursor-default'}`}
+                        className={`w-full text-left p-4 rounded-2xl border text-xs sm:text-sm font-semibold transition-all duration-200 ${optionBorder} ${selectedOpt === null ? 'cursor-pointer shadow-sm hover:shadow-md' : 'cursor-default'}`}
                       >
                         {opt.text}
                       </button>
@@ -246,7 +246,7 @@ export const Quiz = () => {
               </div>
 
               {selectedOpt !== null && (
-                <div className="p-4 bg-primary/20 border border-muted/10 rounded-2xl text-xs space-y-2.5 animate-fadeIn">
+                <div className="p-4 bg-primary/30 dark:bg-card/50 backdrop-blur-sm border border-muted/15 dark:border-accent/10 rounded-2xl text-xs space-y-2.5 animate-fadeIn">
                   <div className="flex items-center space-x-2">
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-muted">Security Analysis:</span>
                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${

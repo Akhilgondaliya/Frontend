@@ -89,7 +89,7 @@ export const HowItWorks = () => {
         <div className="relative border-l border-muted/30 ml-4 pl-8 space-y-8 py-2">
           {steps.map((step, idx) => (
             <div key={idx} className="relative group">
-              <span className="absolute -left-12 top-0.5 w-8 h-8 rounded-full bg-card dark:bg-card border-2 border-accent text-accent font-mono font-extrabold text-xs flex items-center justify-center group-hover:bg-accent group-hover:text-primary transition-all duration-300">
+              <span className="absolute -left-12 top-0.5 w-8 h-8 rounded-full bg-card/90 dark:bg-card/80 border-2 border-accent text-accent font-mono font-extrabold text-xs flex items-center justify-center group-hover:bg-accent group-hover:text-primary dark:group-hover:text-[#060b14] group-hover:shadow-md group-hover:shadow-accent/20 transition-all duration-300">
                 {idx + 1}
               </span>
               <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">{step.title}</h3>
@@ -107,20 +107,20 @@ export const HowItWorks = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl bg-card border border-emerald-500/20 text-center space-y-2">
+          <div className="p-6 rounded-2xl bg-card/65 dark:bg-card/45 backdrop-blur-md border border-emerald-500/20 text-center space-y-2 hover:border-emerald-500/40 hover:scale-[1.02] transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-emerald-500/5">
             <span className="text-xs font-bold text-safe bg-safe/10 px-2 py-0.5 rounded">Range: 0 – 39</span>
             <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Verdict: SAFE</h3>
-            <p className="text-xs text-muted">Passed our checks with minimal to no flags. The website uses secure SSL encryption and has an established registration history.</p>
+            <p className="text-xs text-muted font-semibold">Passed our checks with minimal to no flags. The website uses secure SSL encryption and has an established registration history.</p>
           </div>
-          <div className="p-6 rounded-2xl bg-card border border-amber-500/20 text-center space-y-2">
+          <div className="p-6 rounded-2xl bg-card/65 dark:bg-card/45 backdrop-blur-md border border-amber-500/20 text-center space-y-2 hover:border-amber-500/40 hover:scale-[1.02] transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-amber-500/5">
             <span className="text-xs font-bold text-suspicious bg-suspicious/10 px-2 py-0.5 rounded">Range: 40 – 69</span>
             <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Verdict: SUSPICIOUS</h3>
-            <p className="text-xs text-muted">A few warning flags were triggered (like missing SSL, a new domain, or odd keywords). We recommend browsing with caution.</p>
+            <p className="text-xs text-muted font-semibold">A few warning flags were triggered (like missing SSL, a new domain, or odd keywords). We recommend browsing with caution.</p>
           </div>
-          <div className="p-6 rounded-2xl bg-card border border-rose-500/20 text-center space-y-2">
+          <div className="p-6 rounded-2xl bg-card/65 dark:bg-card/45 backdrop-blur-md border border-rose-500/20 text-center space-y-2 hover:border-rose-500/40 hover:scale-[1.02] transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-rose-500/5">
             <span className="text-xs font-bold text-phishing bg-phishing/10 px-2 py-0.5 rounded">Range: 70 – 100</span>
             <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Verdict: PHISHING</h3>
-            <p className="text-xs text-muted">High alert. Severe threat flags triggered (such as spoofed brand names, dangerous redirects, or multiple URL tricks).</p>
+            <p className="text-xs text-muted font-semibold">High alert. Severe threat flags triggered (such as spoofed brand names, dangerous redirects, or multiple URL tricks).</p>
           </div>
         </div>
       </section>
@@ -132,10 +132,10 @@ export const HowItWorks = () => {
           <p className="text-xs text-muted">A breakdown of the points we add when a flag is triggered.</p>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-muted/20 bg-card">
+        <div className="overflow-x-auto rounded-2xl border border-muted/20 dark:border-accent/10 bg-card/65 dark:bg-card/45 backdrop-blur-md shadow-md">
           <table className="w-full text-left text-xs sm:text-sm border-collapse">
             <thead>
-              <tr className="bg-card dark:bg-card border-b border-muted/20 text-accent font-bold uppercase tracking-wider text-xs">
+              <tr className="bg-card/40 dark:bg-card/25 border-b border-muted/20 text-accent font-bold uppercase tracking-wider text-xs">
                 <th className="p-4 text-center w-12">#</th>
                 <th className="p-4">Check Name</th>
                 <th className="p-4">What It Looks For</th>
@@ -165,10 +165,10 @@ export const HowItWorks = () => {
 
         <div className="space-y-3">
           {faqs.map((faq, idx) => (
-            <div key={idx} className="bg-card dark:bg-card border border-muted/20 rounded-2xl overflow-hidden">
+            <div key={idx} className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-2xl overflow-hidden hover:border-accent/30 transition-colors">
               <button
                 onClick={() => toggleFaq(idx)}
-                className="w-full flex items-center justify-between p-4 sm:p-5 text-left focus:outline-none hover:bg-primary/25 cursor-pointer"
+                className="w-full flex items-center justify-between p-4 sm:p-5 text-left focus:outline-none hover:bg-primary/10 dark:hover:bg-primary/20 cursor-pointer"
                 id={`faq-btn-${idx}`}
               >
                 <div className="flex items-center space-x-3 pr-4">
@@ -192,7 +192,7 @@ export const HowItWorks = () => {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25, ease: 'easeInOut' }}
                   >
-                    <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-muted leading-relaxed border-t border-muted/5 bg-primary/10">
+                    <div className="px-5 pb-5 pt-2 text-xs sm:text-sm text-muted leading-relaxed border-t border-muted/10 bg-primary/20 dark:bg-primary/30">
                       {faq.a}
                     </div>
                   </motion.div>

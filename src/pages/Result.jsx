@@ -167,7 +167,7 @@ export const Result = () => {
       </div>
 
       {/* Zone slide indicator progress ruler */}
-      <section className="bg-card dark:bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-4">
+      <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
         <h3 className="text-sm font-extrabold uppercase tracking-wider text-muted">
           Safety Threat Level
         </h3>
@@ -210,7 +210,7 @@ export const Result = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* SSL block */}
-        <section className="bg-card dark:bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
+        <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md hover:border-accent/30 transition-colors">
           <div className="flex items-center space-x-2 text-accent border-b border-muted/5 pb-3">
             <FiLock className="w-5 h-5" />
             <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">SSL Connection & Security</h3>
@@ -259,7 +259,7 @@ export const Result = () => {
         </section>
 
         {/* WHOIS block */}
-        <section className="bg-card dark:bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
+        <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md hover:border-accent/30 transition-colors">
           <div className="flex items-center space-x-2 text-accent border-b border-muted/5 pb-3">
             <FiCalendar className="w-5 h-5" />
             <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">Domain Registration details</h3>

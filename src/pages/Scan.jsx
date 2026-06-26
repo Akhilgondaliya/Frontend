@@ -508,7 +508,7 @@ export const Scan = () => {
             initial={{ opacity: 0, y: 15, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.35 }}
-            className="bg-card dark:bg-card/45 backdrop-blur-xl border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
+            className="bg-card/65 dark:bg-card/45 backdrop-blur-xl border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full filter blur-3xl pointer-events-none" />
             
@@ -533,7 +533,7 @@ export const Scan = () => {
                   placeholder="e.g. login-secure-paypal.com/verify"
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
-                  className="w-full bg-primary/30 hover:bg-primary/45 border border-muted/30 focus:border-accent focus:ring-2 focus:ring-accent/10 rounded-xl px-4 py-3.5 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/50 focus:outline-none transition-all"
+                  className="w-full bg-primary/20 hover:bg-primary/35 focus:bg-primary/45 border border-muted/25 dark:border-accent/15 focus:border-accent focus:ring-4 focus:ring-accent/10 rounded-xl px-4 py-3.5 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/40 focus:outline-none transition-all"
                 />
                 <p className="text-[10px] text-muted leading-normal">Our system normalizes URL schemes automatically (e.g. adding https:// if missing).</p>
               </div>
@@ -556,7 +556,7 @@ export const Scan = () => {
             initial={{ opacity: 0, y: 15, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.35 }}
-            className="bg-card dark:bg-card/45 backdrop-blur-xl border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
+            className="bg-card/65 dark:bg-card/45 backdrop-blur-xl border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full filter blur-3xl pointer-events-none" />
             
@@ -652,7 +652,7 @@ export const Scan = () => {
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-muted/30 hover:border-accent/40 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 hover:bg-primary/20 transition-all"
+                  className="border-2 border-dashed border-muted/25 dark:border-accent/20 hover:border-accent/60 dark:hover:border-accent/50 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 hover:bg-primary/20 dark:bg-card/20 dark:hover:bg-card/40 transition-all shadow-inner group hover:shadow-accent/5"
                   id="qr-dropzone"
                 >
                   <input
@@ -662,7 +662,7 @@ export const Scan = () => {
                     onChange={handleFileChange}
                     className="hidden"
                   />
-                  <FiUploadCloud className="w-10 h-10 text-muted mb-2 transition-transform duration-300 hover:scale-105" />
+                  <FiUploadCloud className="w-10 h-10 text-muted group-hover:text-accent mb-2 transition-colors duration-300 transform group-hover:scale-110" />
                   <p className="text-xs font-semibold text-muted">
                     Drag & drop your QR image here, or <span className="text-accent underline">browse</span>
                   </p>
@@ -695,7 +695,7 @@ export const Scan = () => {
             initial={{ opacity: 0, y: 15, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.35 }}
-            className="bg-card dark:bg-card/45 backdrop-blur-xl border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
+            className="bg-card/65 dark:bg-card/45 backdrop-blur-xl border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full filter blur-3xl pointer-events-none" />
             
@@ -720,7 +720,7 @@ export const Scan = () => {
                   placeholder="e.g. billing-support@paypal-security.com"
                   value={mailSender}
                   onChange={(e) => setMailSender(e.target.value)}
-                  className="w-full bg-primary/30 hover:bg-primary/45 border border-muted/30 focus:border-accent focus:ring-2 focus:ring-accent/10 rounded-xl px-4 py-3.5 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/50 focus:outline-none transition-all"
+                  className="w-full bg-primary/20 hover:bg-primary/35 focus:bg-primary/45 border border-muted/25 dark:border-accent/15 focus:border-accent focus:ring-4 focus:ring-accent/10 rounded-xl px-4 py-3.5 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/40 focus:outline-none transition-all"
                 />
               </div>
               
@@ -734,7 +734,7 @@ export const Scan = () => {
                   placeholder="e.g. ACTION REQUIRED: Reset your credentials"
                   value={mailSubject}
                   onChange={(e) => setMailSubject(e.target.value)}
-                  className="w-full bg-primary/30 hover:bg-primary/45 border border-muted/30 focus:border-accent focus:ring-2 focus:ring-accent/10 rounded-xl px-4 py-3.5 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/50 focus:outline-none transition-all"
+                  className="w-full bg-primary/20 hover:bg-primary/35 focus:bg-primary/45 border border-muted/25 dark:border-accent/15 focus:border-accent focus:ring-4 focus:ring-accent/10 rounded-xl px-4 py-3.5 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/40 focus:outline-none transition-all"
                 />
               </div>
               
@@ -748,7 +748,7 @@ export const Scan = () => {
                   placeholder="Paste the full text of the email here. E.g. Dear Customer, your account is suspended. Click here to reactivate: http://secure-paypal-login.tk"
                   value={mailBody}
                   onChange={(e) => setMailBody(e.target.value)}
-                  className="w-full bg-primary/30 hover:bg-primary/45 border border-muted/30 focus:border-accent focus:ring-2 focus:ring-accent/10 rounded-xl px-4 py-3 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/50 focus:outline-none transition-all font-sans resize-none"
+                  className="w-full bg-primary/20 hover:bg-primary/35 focus:bg-primary/45 border border-muted/25 dark:border-accent/15 focus:border-accent focus:ring-4 focus:ring-accent/10 rounded-xl px-4 py-3 text-sm text-[#0d1b2a] dark:text-white placeholder-muted/40 focus:outline-none transition-all font-sans resize-none"
                 />
               </div>
               
@@ -770,7 +770,7 @@ export const Scan = () => {
             initial={{ opacity: 0, y: 15, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.35 }}
-            className="bg-card dark:bg-card/45 backdrop-blur-xl border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
+            className="bg-card/65 dark:bg-card/45 backdrop-blur-xl border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full filter blur-3xl pointer-events-none" />
             
@@ -795,7 +795,7 @@ export const Scan = () => {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleImageScanDrop}
                   onClick={() => imageInputRef.current?.click()}
-                  className="border-2 border-dashed border-muted/30 hover:border-accent/40 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 hover:bg-primary/20 transition-all"
+                  className="border-2 border-dashed border-muted/25 dark:border-accent/20 hover:border-accent/60 dark:hover:border-accent/50 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 hover:bg-primary/20 dark:bg-card/20 dark:hover:bg-card/40 transition-all shadow-inner group hover:shadow-accent/5"
                   id="image-scan-dropzone"
                 >
                   <input
@@ -838,7 +838,7 @@ export const Scan = () => {
             initial={{ opacity: 0, y: 15, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.35 }}
-            className="bg-card dark:bg-card/45 backdrop-blur-xl border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
+            className="bg-card/65 dark:bg-card/45 backdrop-blur-xl border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full filter blur-3xl pointer-events-none" />
             
@@ -863,7 +863,7 @@ export const Scan = () => {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleApkScanDrop}
                   onClick={() => apkInputRef.current?.click()}
-                  className="border-2 border-dashed border-muted/30 hover:border-accent/40 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 hover:bg-primary/20 transition-all"
+                  className="border-2 border-dashed border-muted/25 dark:border-accent/20 hover:border-accent/60 dark:hover:border-accent/50 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 hover:bg-primary/20 dark:bg-card/20 dark:hover:bg-card/40 transition-all shadow-inner group hover:shadow-accent/5"
                   id="apk-scan-dropzone"
                 >
                   <input

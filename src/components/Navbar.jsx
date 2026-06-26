@@ -49,8 +49,8 @@ export const Navbar = () => {
             
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group focus:outline-none" id="navbar-logo">
-              <FiShield className="w-8 h-8 text-accent transition-transform duration-300 group-hover:scale-110" />
-              <span className="text-2xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white">
+              <FiShield className="w-6 h-6 text-accent transition-transform duration-300 group-hover:scale-110" />
+              <span className="text-xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white">
                 Phish<span className="text-accent">Zero</span>
               </span>
             </Link>
@@ -111,7 +111,7 @@ export const Navbar = () => {
   
       {/* Mobile Drawer Overlay */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-16 sm:top-20 bg-primary/95 dark:bg-primary/95 z-40 transition-all duration-300">
+        <div className="md:hidden fixed inset-0 top-16 sm:top-20 bg-primary/80 dark:bg-primary/80 backdrop-blur-xl z-40 transition-all duration-300 border-t border-muted/10">
           <nav className="flex flex-col space-y-4 px-6 pt-8 pb-10">
             {links.map((link) => (
               <NavLink

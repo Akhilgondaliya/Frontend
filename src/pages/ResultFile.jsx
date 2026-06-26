@@ -154,7 +154,7 @@ export const ResultFile = () => {
         <div className="lg:col-span-1 space-y-8">
           
           {/* Verdict Ring Widget */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 text-center space-y-6 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 text-center space-y-6 shadow-md">
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted">Analysis Verdict</h3>
             
             <div className="flex justify-center">
@@ -169,13 +169,13 @@ export const ResultFile = () => {
               <span className="font-extrabold text-sm tracking-wide uppercase">{verdictLabel}</span>
             </div>
 
-            <p className="text-xs text-muted leading-relaxed px-2">
+            <p className="text-xs text-muted leading-relaxed px-2 font-semibold">
               {verdictDesc}
             </p>
           </section>
 
           {/* File Metadata Card */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 space-y-4 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 space-y-4 shadow-md hover:border-accent/30 transition-colors duration-300">
             <div className="flex items-center space-x-2 border-b border-muted/5 pb-3">
               <FiShield className="w-5 h-5 text-accent" />
               <h3 className="text-sm font-bold text-[#0d1b2a] dark:text-white">File Properties</h3>
@@ -210,7 +210,7 @@ export const ResultFile = () => {
           
           {/* QR & Stego Details (If Image) */}
           {filetype === 'image' && (
-            <section className="bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
+            <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md hover:border-accent/30 transition-colors duration-300">
               <div className="flex items-center space-x-2.5 text-accent border-b border-muted/5 pb-4">
                 <FiLink className="w-5.5 h-5.5" />
                 <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Embedded Image Channels</h3>
@@ -250,7 +250,7 @@ export const ResultFile = () => {
 
           {/* Permissions Details (If APK) */}
           {filetype === 'apk' && (
-            <section className="bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
+            <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md hover:border-accent/30 transition-colors duration-300">
               <div className="flex items-center space-x-2.5 text-accent border-b border-muted/5 pb-4">
                 <FiShield className="w-5.5 h-5.5" />
                 <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Android Manifest Analysis</h3>
@@ -313,7 +313,7 @@ export const ResultFile = () => {
           )}
 
           {/* Extracted URLs scan detail */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md hover:border-accent/30 transition-colors duration-300">
             <div className="flex items-center justify-between border-b border-muted/5 pb-4">
               <div className="flex items-center space-x-2.5 text-accent">
                 <FiLink className="w-5.5 h-5.5" />

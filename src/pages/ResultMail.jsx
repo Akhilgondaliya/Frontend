@@ -161,7 +161,7 @@ export const ResultMail = () => {
         <div className="lg:col-span-1 space-y-8">
           
           {/* Verdict Ring Widget */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 text-center space-y-6 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 text-center space-y-6 shadow-md">
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted">Analysis Verdict</h3>
             
             <div className="flex justify-center">
@@ -176,13 +176,13 @@ export const ResultMail = () => {
               <span className="font-extrabold text-sm tracking-wide uppercase">{verdictLabel}</span>
             </div>
 
-            <p className="text-xs text-muted leading-relaxed px-2">
+            <p className="text-xs text-muted leading-relaxed px-2 font-semibold">
               {verdictDesc}
             </p>
           </section>
 
           {/* Sender analysis details */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 space-y-4 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 space-y-4 shadow-md hover:border-accent/30 transition-colors duration-300">
             <div className="flex items-center space-x-2 border-b border-muted/5 pb-3">
               <FiShield className="w-5 h-5 text-accent" />
               <h3 className="text-sm font-bold text-[#0d1b2a] dark:text-white">Sender Authenticity</h3>
@@ -215,7 +215,7 @@ export const ResultMail = () => {
           </section>
 
           {/* Body Heuristics details */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 space-y-4 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 space-y-4 shadow-md hover:border-accent/30 transition-colors duration-300">
             <div className="flex items-center space-x-2 border-b border-muted/5 pb-3">
               <FiFileText className="w-5 h-5 text-accent" />
               <h3 className="text-sm font-bold text-[#0d1b2a] dark:text-white">Content Structure Audit</h3>
@@ -259,7 +259,7 @@ export const ResultMail = () => {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Flagged threat details list */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
             <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Triggered Phishing Indicators</h3>
             
             <div className="space-y-3">
@@ -284,7 +284,7 @@ export const ResultMail = () => {
           </section>
 
           {/* Links Verification Grid */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
             <div className="flex items-center justify-between border-b border-muted/5 pb-3">
               <div className="flex items-center space-x-2">
                 <FiLink className="w-5 h-5 text-accent" />
@@ -352,7 +352,7 @@ export const ResultMail = () => {
           </section>
 
           {/* Mitigation Actions */}
-          <section className="bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
+          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md">
             <div className="flex items-center space-x-2 border-b border-muted/5 pb-3">
               <FiInfo className="w-5 h-5 text-accent" />
               <h3 className="text-lg font-bold text-[#0d1b2a] dark:text-white">Email Actionable Mitigation Plan</h3>

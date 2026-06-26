@@ -30,7 +30,11 @@ export const App = () => {
         Parent structural wrapper inheriting base background and text colors 
         configured dynamically in index.css based on dark class 
       */}
-      <div className="flex flex-col min-h-screen text-[#0d1b2a] dark:text-white bg-transparent">
+      <div className="flex flex-col min-h-screen text-[#0d1b2a] dark:text-white bg-primary grid-bg relative overflow-hidden">
+        {/* Ambient background glows */}
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full bg-accent/5 dark:bg-accent/5 filter blur-[120px] pointer-events-none z-0 animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute bottom-[10%] right-[-10%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full bg-accent/5 dark:bg-accent/5 filter blur-[150px] pointer-events-none z-0 animate-pulse" style={{ animationDuration: '12s' }} />
+
         {/* Scroll Progress line indicator */}
         <ScrollProgress />
 
@@ -41,7 +45,7 @@ export const App = () => {
         <MarqueeBanner />
 
         {/* Dynamic Route Pages Container */}
-        <main className="flex-grow">
+        <main className="flex-grow relative z-10">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/scan" element={<Scan />} />

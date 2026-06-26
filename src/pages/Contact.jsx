@@ -18,7 +18,7 @@ export const Contact = () => {
         </div>
 
         {/* Profile Card */}
-        <section className="bg-card border border-muted/20 rounded-3xl p-8 space-y-6 shadow-xl relative overflow-hidden text-center">
+        <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-8 space-y-6 shadow-xl relative overflow-hidden text-center hover:scale-[1.01] hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
           {/* Subtle background glow */}
           <div className="absolute -top-10 -left-10 w-24 h-24 bg-accent/10 rounded-full filter blur-xl" />
           <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-accent/10 rounded-full filter blur-xl" />

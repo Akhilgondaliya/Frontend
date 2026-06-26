@@ -20,7 +20,7 @@ export const MarqueeBanner = () => {
   ]
 
   return (
-    <div className="bg-accent text-primary py-2.5 overflow-hidden whitespace-nowrap relative z-40 select-none shadow-sm font-bold text-xs sm:text-sm tracking-wide border-b border-accent/10">
+    <div className="hidden md:block bg-accent text-primary py-2.5 overflow-hidden whitespace-nowrap relative z-40 select-none shadow-sm font-bold text-xs sm:text-sm tracking-wide border-b border-accent/10">
       <div className="flex w-max animate-marquee">
         {/* Render items twice for seamless loop */}
         <div className="flex items-center space-x-12 px-6">

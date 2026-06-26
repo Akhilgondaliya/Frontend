@@ -8,7 +8,6 @@ import { ThemeContext } from './context/ThemeContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollProgress from './components/ScrollProgress'
-import QuizCalloutBanner from './components/QuizCalloutBanner'
 import ScrollToTop from './components/ScrollToTop'
 import PageTransition from './components/PageTransition'
 
@@ -39,11 +38,8 @@ const AppContent = () => {
       {/* Global Navigation header */}
       <Navbar />
 
-      {/* Interactive awareness quiz callout banner */}
-      <QuizCalloutBanner />
-
       {/* Dynamic Route Pages Container */}
-      <main className="flex-grow relative z-10">
+      <main className="flex-grow relative z-10 pt-16 sm:pt-20">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition><Home /></PageTransition>} />

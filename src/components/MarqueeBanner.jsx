@@ -20,23 +20,29 @@ export const MarqueeBanner = () => {
   ]
 
   return (
-    <div className="marquee-banner-container bg-accent text-primary py-2.5 overflow-hidden whitespace-nowrap relative z-40 select-none shadow-sm font-bold text-xs sm:text-sm tracking-wide border-b border-accent/10">
+    <div className="marquee-banner-container mt-16 sm:mt-20 bg-accent text-primary py-2.5 overflow-hidden whitespace-nowrap relative z-40 select-none shadow-sm font-bold text-xs sm:text-sm tracking-wide border-b border-accent/10">
       <div className="flex w-max animate-marquee">
         {/* Render items twice for seamless loop */}
-        <div className="flex items-center space-x-12 px-6">
+        <div className="flex items-center space-x-8 px-4">
           {stats.map((item, idx) => (
-            <span key={idx} className="inline-flex items-center space-x-2">
-              <span>{item.icon}</span>
-              <span>{item.text}</span>
-            </span>
+            <div key={idx} className="flex items-center space-x-8">
+              <span className="inline-flex items-center space-x-2">
+                <span>{item.icon}</span>
+                <span>{item.text}</span>
+              </span>
+              <span className="text-primary/30 font-light select-none">|</span>
+            </div>
           ))}
         </div>
-        <div className="flex items-center space-x-12 px-6" aria-hidden="true">
+        <div className="flex items-center space-x-8 px-4" aria-hidden="true">
           {stats.map((item, idx) => (
-            <span key={idx} className="inline-flex items-center space-x-2">
-              <span>{item.icon}</span>
-              <span>{item.text}</span>
-            </span>
+            <div key={idx} className="flex items-center space-x-8">
+              <span className="inline-flex items-center space-x-2">
+                <span>{item.icon}</span>
+                <span>{item.text}</span>
+              </span>
+              <span className="text-primary/30 font-light select-none">|</span>
+            </div>
           ))}
         </div>
       </div>

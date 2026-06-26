@@ -8,7 +8,7 @@ import { ThemeContext } from './context/ThemeContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollProgress from './components/ScrollProgress'
-import TypewriterAdviceBanner from './components/TypewriterAdviceBanner'
+import TerminalThreatLogger from './components/TerminalThreatLogger'
 import ScrollToTop from './components/ScrollToTop'
 import PageTransition from './components/PageTransition'
 
@@ -38,8 +38,8 @@ const AppContent = () => {
       {/* Global Navigation header */}
       <Navbar />
 
-      {/* Typewriter security statistics & advice banner */}
-      <TypewriterAdviceBanner />
+      {/* Monospace interactive terminal security logger */}
+      <TerminalThreatLogger />
 
       {/* Dynamic Route Pages Container */}
       <main className="flex-grow relative z-10">

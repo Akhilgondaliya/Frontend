@@ -422,6 +422,22 @@ export const Scan = () => {
     }
   }
 
+  const loadSampleFile = async (endpoint, filename, setFile, setFileName) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || ''
+      const url = `${apiUrl}${endpoint}`
+      const response = await fetch(url)
+      if (!response.ok) throw new Error('Network response was not ok')
+      const blob = await response.blob()
+      const file = new File([blob], filename, { type: blob.type })
+      setFile(file)
+      setFileName(filename)
+      toast.success(`Loaded sample: ${filename}! Click scan to start analysis.`)
+    } catch (err) {
+      console.error(err)
+      toast.error(`Failed to load ${filename} sample from server.`)
+    }
+  }
 
   return (
     <div className="min-h-screen py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -722,37 +738,90 @@ export const Scan = () => {
               <div className="flex items-center space-x-2">
                 <FiInfo className="w-4 h-4 text-accent" />
                 <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#0d1b2a] dark:text-white">
-                  🧪 Download Sample QR
+                  🧪 Try Sample QR Codes
                 </span>
               </div>
+              <p className="text-xs text-muted leading-relaxed">
+                Load a mock QR image directly into the uploader state without downloading, or save it to your local device.
+              </p>
               
-              <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-primary/20 dark:bg-card/30 backdrop-blur-sm rounded-2xl border border-muted/15 dark:border-accent/5">
-                <div className="flex flex-col items-center space-y-1 flex-shrink-0">
-                  <img
-                    src={`${import.meta.env.VITE_API_URL || ''}/api/sample-qr`}
-                    alt="Sample Phishing QR Code"
-                    className="w-20 h-20 rounded-lg bg-white p-1 border border-muted/20"
-                    onError={(e) => {
-                      e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23f7fafc"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="10" fill="%23a0aec0">Sample QR</text></svg>'
-                    }}
-                  />
-                  <span className="text-[9px] text-muted font-bold">QR Preview</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Phishing QR Card */}
+                <div className="p-4 bg-phishing/5 rounded-2xl border border-phishing/15 flex flex-col justify-between space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <h4 className="text-xs font-bold text-phishing">Phishing QR Sample</h4>
+                      <p className="text-[10px] text-muted leading-normal">
+                        Points to mock phishing site: `paypal-secure-login.verify-account.tk`
+                      </p>
+                    </div>
+                    <img
+                      src={`${import.meta.env.VITE_API_URL || ''}/api/sample-qr`}
+                      alt="Phish QR"
+                      className="w-12 h-12 rounded bg-white p-0.5 border border-muted/20 flex-shrink-0"
+                      onError={(e) => {
+                        e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23fee2e2"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%23ef4444">QR</text></svg>'
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => loadSampleFile('/api/sample-qr', 'sample_phishing_qr.png', setQrFile, setQrFileName)}
+                      className="flex-1 py-2 px-3 rounded-lg bg-phishing/10 hover:bg-phishing/20 text-phishing font-bold text-xs transition-all cursor-pointer text-center font-sans"
+                      id="try-phishing-qr-btn"
+                    >
+                      Try Sample
+                    </button>
+                    <a
+                      href={`${import.meta.env.VITE_API_URL || ''}/api/sample-qr`}
+                      download="sample_phishing_qr.png"
+                      className="p-2 rounded-lg bg-primary/20 hover:bg-primary/35 text-muted hover:text-[#0d1b2a] dark:hover:text-white transition-all cursor-pointer"
+                      title="Download QR Image"
+                      id="download-sample-qr-btn"
+                    >
+                      <FiDownload className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
                 </div>
 
-                <div className="flex-1 space-y-1 text-center sm:text-left">
-                  <h4 className="text-xs font-bold text-[#0d1b2a] dark:text-white">Sample Phishing QR Code</h4>
-                  <p className="text-[11px] text-muted leading-relaxed">
-                    This QR image resolves to the mock phishing domain. Download and drop it into the upload box above, or scan it with your camera.
-                  </p>
-                  <a
-                    href={`${import.meta.env.VITE_API_URL || ''}/api/sample-qr`}
-                    download="sample_phishing_qr.png"
-                    className="inline-flex items-center space-x-1.5 text-xs font-bold text-accent hover:text-accent/80 transition-colors pt-1 cursor-pointer"
-                    id="download-sample-qr-btn"
-                  >
-                    <FiDownload className="w-3.5 h-3.5" />
-                    <span>Download QR Image</span>
-                  </a>
+                {/* Safe QR Card */}
+                <div className="p-4 bg-safe/5 rounded-2xl border border-safe/15 flex flex-col justify-between space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <h4 className="text-xs font-bold text-safe">Safe QR Sample</h4>
+                      <p className="text-[10px] text-muted leading-normal">
+                        Points to standard safe site: `https://google.com`
+                      </p>
+                    </div>
+                    <img
+                      src={`${import.meta.env.VITE_API_URL || ''}/api/sample-qr-safe`}
+                      alt="Safe QR"
+                      className="w-12 h-12 rounded bg-white p-0.5 border border-muted/20 flex-shrink-0"
+                      onError={(e) => {
+                        e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%23d1fae5"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%2310b981">QR</text></svg>'
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => loadSampleFile('/api/sample-qr-safe', 'sample_safe_qr.png', setQrFile, setQrFileName)}
+                      className="flex-1 py-2 px-3 rounded-lg bg-safe/10 hover:bg-safe/20 text-safe font-bold text-xs transition-all cursor-pointer text-center font-sans"
+                      id="try-safe-qr-btn"
+                    >
+                      Try Sample
+                    </button>
+                    <a
+                      href={`${import.meta.env.VITE_API_URL || ''}/api/sample-qr-safe`}
+                      download="sample_safe_qr.png"
+                      className="p-2 rounded-lg bg-primary/20 hover:bg-primary/35 text-muted hover:text-[#0d1b2a] dark:hover:text-white transition-all cursor-pointer"
+                      title="Download Safe QR Image"
+                      id="download-sample-qr-safe-btn"
+                    >
+                      <FiDownload className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -946,22 +1015,71 @@ export const Scan = () => {
               <div className="flex items-center space-x-2">
                 <FiInfo className="w-4 h-4 text-accent" />
                 <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#0d1b2a] dark:text-white">
-                  🧪 Download Stego PNG Sample
+                  🧪 Try Sample Images
                 </span>
               </div>
               <p className="text-xs text-muted leading-relaxed">
-                Download a custom-built PNG steganography file. This image contains a concealed phishing link appended to the end of its raw file bytes to demonstrate signature detection.
+                Load a sample image directly into the scanner state without downloading, or save it to your local device.
               </p>
-              <div className="pt-1">
-                <a
-                  href={`${import.meta.env.VITE_API_URL || ''}/api/sample-image`}
-                  download="sample_stego.png"
-                  className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl border border-accent/30 bg-accent/5 hover:bg-accent/15 text-accent font-bold text-xs tracking-wider transition-all cursor-pointer"
-                  id="download-stego-image-btn"
-                >
-                  <FiDownload className="w-4.5 h-4.5" />
-                  <span>Download Stego PNG</span>
-                </a>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                {/* Phishing Stego Image Card */}
+                <div className="p-4 bg-phishing/5 rounded-2xl border border-phishing/15 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold text-phishing">Phishing Stego PNG</h4>
+                    <p className="text-[10px] text-muted leading-normal">
+                      Contains raw phishing link bytes appended at the end of the image stream.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => loadSampleFile('/api/sample-image', 'sample_stego.png', setImageFile, setImageFileName)}
+                      className="flex-1 py-2 px-3 rounded-lg bg-phishing/10 hover:bg-phishing/20 text-phishing font-bold text-xs transition-all cursor-pointer text-center font-sans"
+                      id="try-phishing-image-btn"
+                    >
+                      Try Sample
+                    </button>
+                    <a
+                      href={`${import.meta.env.VITE_API_URL || ''}/api/sample-image`}
+                      download="sample_stego.png"
+                      className="p-2 rounded-lg bg-primary/20 hover:bg-primary/35 text-muted hover:text-[#0d1b2a] dark:hover:text-white transition-all cursor-pointer"
+                      title="Download Stego Image"
+                      id="download-stego-image-btn"
+                    >
+                      <FiDownload className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Safe Image Card */}
+                <div className="p-4 bg-safe/5 rounded-2xl border border-safe/15 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold text-safe">Safe PNG</h4>
+                    <p className="text-[10px] text-muted leading-normal">
+                      Standard image file without any embedded hidden phishing links or threats.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => loadSampleFile('/api/sample-image-safe', 'sample_safe.png', setImageFile, setImageFileName)}
+                      className="flex-1 py-2 px-3 rounded-lg bg-safe/10 hover:bg-safe/20 text-safe font-bold text-xs transition-all cursor-pointer text-center font-sans"
+                      id="try-safe-image-btn"
+                    >
+                      Try Sample
+                    </button>
+                    <a
+                      href={`${import.meta.env.VITE_API_URL || ''}/api/sample-image-safe`}
+                      download="sample_safe.png"
+                      className="p-2 rounded-lg bg-primary/20 hover:bg-primary/35 text-muted hover:text-[#0d1b2a] dark:hover:text-white transition-all cursor-pointer"
+                      title="Download Safe Image"
+                      id="download-safe-image-btn"
+                    >
+                      <FiDownload className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -1035,24 +1153,73 @@ export const Scan = () => {
 
             <div className="border-t border-muted/10 pt-5 space-y-3">
               <div className="flex items-center space-x-2">
-                <FiInfo className="w-4.5 h-4.5 text-accent" />
+                <FiInfo className="w-4 h-4 text-accent" />
                 <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#0d1b2a] dark:text-white">
-                  🧪 Download Phish APK Sample
+                  🧪 Try Sample APKs
                 </span>
               </div>
               <p className="text-xs text-muted leading-relaxed">
-                Download a mock APK package. This archive contains an Android manifest requesting high-risk SMS permissions and includes a compiled class file with embedded malicious URL signatures.
+                Load a sample APK directly into the scanner state without downloading, or save it to your local device.
               </p>
-              <div className="pt-1">
-                <a
-                  href={`${import.meta.env.VITE_API_URL || ''}/api/sample-apk`}
-                  download="sample_phish.apk"
-                  className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl border border-accent/30 bg-accent/5 hover:bg-accent/15 text-accent font-bold text-xs tracking-wider transition-all cursor-pointer"
-                  id="download-sample-apk-btn"
-                >
-                  <FiDownload className="w-4.5 h-4.5" />
-                  <span>Download Phish APK</span>
-                </a>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                {/* Phishing APK Card */}
+                <div className="p-4 bg-phishing/5 rounded-2xl border border-phishing/15 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold text-phishing">Phishing APK Sample</h4>
+                    <p className="text-[10px] text-muted leading-normal">
+                      Contains unsafe permissions (SMS intercept) and hardcoded phishing URLs.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => loadSampleFile('/api/sample-apk', 'sample_phish.apk', setApkFile, setApkFileName)}
+                      className="flex-1 py-2 px-3 rounded-lg bg-phishing/10 hover:bg-phishing/20 text-phishing font-bold text-xs transition-all cursor-pointer text-center font-sans"
+                      id="try-phishing-apk-btn"
+                    >
+                      Try Sample
+                    </button>
+                    <a
+                      href={`${import.meta.env.VITE_API_URL || ''}/api/sample-apk`}
+                      download="sample_phish.apk"
+                      className="p-2 rounded-lg bg-primary/20 hover:bg-primary/35 text-muted hover:text-[#0d1b2a] dark:hover:text-white transition-all cursor-pointer"
+                      title="Download Phish APK"
+                      id="download-sample-apk-btn"
+                    >
+                      <FiDownload className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Safe APK Card */}
+                <div className="p-4 bg-safe/5 rounded-2xl border border-safe/15 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold text-safe">Safe APK Sample</h4>
+                    <p className="text-[10px] text-muted leading-normal">
+                      Contains only standard Internet permission and a clean safe URL.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => loadSampleFile('/api/sample-apk-safe', 'sample_safe.apk', setApkFile, setApkFileName)}
+                      className="flex-1 py-2 px-3 rounded-lg bg-safe/10 hover:bg-safe/20 text-safe font-bold text-xs transition-all cursor-pointer text-center font-sans"
+                      id="try-safe-apk-btn"
+                    >
+                      Try Sample
+                    </button>
+                    <a
+                      href={`${import.meta.env.VITE_API_URL || ''}/api/sample-apk-safe`}
+                      download="sample_safe.apk"
+                      className="p-2 rounded-lg bg-primary/20 hover:bg-primary/35 text-muted hover:text-[#0d1b2a] dark:hover:text-white transition-all cursor-pointer"
+                      title="Download Safe APK"
+                      id="download-sample-apk-safe-btn"
+                    >
+                      <FiDownload className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

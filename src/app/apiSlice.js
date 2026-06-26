@@ -42,6 +42,14 @@ export const apiSlice = createApi({
         body,
       }),
     }),
+    // POST /api/scan-file -> Body: FormData (file)
+    scanFile: builder.mutation({
+      query: (formData) => ({
+        url: '/api/scan-file',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
   }),
 })
 
@@ -49,5 +57,6 @@ export const {
   useScanUrlMutation, 
   useScanQrMutation,
   useScanMailMutation,
+  useScanFileMutation,
   useLazyDownloadReportQuery
 } = apiSlice

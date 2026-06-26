@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { toast } from 'react-toastify'
-import { FiLink, FiCamera, FiUploadCloud, FiSearch, FiVideo, FiVideoOff, FiMail } from 'react-icons/fi'
-import { useScanUrlMutation, useScanQrMutation, useScanMailMutation } from '../app/apiSlice'
+import { FiLink, FiCamera, FiUploadCloud, FiSearch, FiVideo, FiVideoOff, FiMail, FiFileText } from 'react-icons/fi'
+import { useScanUrlMutation, useScanQrMutation, useScanMailMutation, useScanFileMutation } from '../app/apiSlice'
 import jsQR from 'jsqr'
 import LoadingSpinner from '../components/LoadingSpinner'
 import SampleSection from '../components/SampleSection'
@@ -26,6 +26,11 @@ export const Scan = () => {
   const [mailSubject, setMailSubject] = useState('')
   const [mailBody, setMailBody] = useState('')
   
+  // File Scan States (APKs and Images)
+  const [fileToScan, setFileToScan] = useState(null)
+  const [fileToScanName, setFileToScanName] = useState('')
+  const fileScanInputRef = useRef(null)
+  
   const videoRef = useRef(null)
   const fileInputRef = useRef(null)
 
@@ -33,6 +38,7 @@ export const Scan = () => {
   const [scanUrl, { isLoading: isUrlScanning }] = useScanUrlMutation()
   const [scanQr, { isLoading: isQrScanning }] = useScanQrMutation()
   const [scanMail, { isLoading: isMailScanning }] = useScanMailMutation()
+  const [scanFile, { isLoading: isFileScanning }] = useScanFileMutation()
 
   const requestRef = useRef(null)
   const lastScanTimeRef = useRef(0)
@@ -308,6 +314,58 @@ export const Scan = () => {
     }
   }
 
+  // Handle File Scan Selection
+  const handleFileScanChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const ext = file.name.split('.').pop().toLowerCase()
+      if (ext === 'apk' || ['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
+        setFileToScan(file)
+        setFileToScanName(file.name)
+        toast.info(`Loaded: ${file.name}`)
+      } else {
+        toast.error('Please select an APK or standard Image file (PNG, JPG, JPEG, WEBP)')
+      }
+    }
+  }
+
+  // Handle File Scan Drop
+  const handleFileScanDrop = (e) => {
+    e.preventDefault()
+    const file = e.dataTransfer.files[0]
+    if (file) {
+      const ext = file.name.split('.').pop().toLowerCase()
+      if (ext === 'apk' || ['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
+        setFileToScan(file)
+        setFileToScanName(file.name)
+        toast.info(`Loaded: ${file.name}`)
+      } else {
+        toast.error('Please drop an APK or standard Image file (PNG, JPG, JPEG, WEBP)')
+      }
+    }
+  }
+
+  // Submit File scan
+  const handleFileScanSubmit = async (e) => {
+    e.preventDefault()
+    if (!fileToScan) {
+      toast.error('Please select or drop a file first.')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('file', fileToScan)
+
+    try {
+      const data = await scanFile(formData).unwrap()
+      toast.success('File scanned successfully!')
+      navigate('/result-file', { state: { scanResult: data } })
+    } catch (err) {
+      const errMsg = err.data?.error || 'Oops, our server had trouble scanning this file. Make sure the backend is active.'
+      toast.error(errMsg)
+    }
+  }
+
   // Fills URL input from Sample section
   const handleSelectSampleUrl = (url) => {
     setUrlInput(url)
@@ -319,8 +377,13 @@ export const Scan = () => {
     <div className="min-h-screen py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       
       {/* Loading Spinners */}
-      {(isUrlScanning || isQrScanning || isMailScanning) && (
-        <LoadingSpinner message={isUrlScanning ? 'Reading website details' : isQrScanning ? 'Decoding your QR code link' : 'Analyzing email content safety'} />
+      {(isUrlScanning || isQrScanning || isMailScanning || isFileScanning) && (
+        <LoadingSpinner message={
+          isUrlScanning ? 'Reading website details' : 
+          isQrScanning ? 'Decoding your QR code link' : 
+          isMailScanning ? 'Analyzing email content safety' : 
+          'Uploading and sandboxing file contents...'
+        } />
       )}
 
       {/* Header title */}
@@ -334,7 +397,7 @@ export const Scan = () => {
       </div>
 
       {/* Tab Navigation Menu */}
-      <div className="flex justify-center border-b border-muted/10 max-w-md mx-auto">
+      <div className="flex justify-center border-b border-muted/10 max-w-xl mx-auto">
         <button
           onClick={() => {
             stopCamera()
@@ -372,6 +435,19 @@ export const Scan = () => {
         >
           <FiMail className="w-4 h-4" />
           <span>Email Sandbox</span>
+        </button>
+        <button
+          onClick={() => {
+            stopCamera()
+            setActiveTab('file')
+          }}
+          className={`flex items-center space-x-2 px-6 py-3 border-b-2 text-sm font-extrabold tracking-wide transition-all cursor-pointer ${
+            activeTab === 'file' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-[#0d1b2a] dark:hover:text-white'
+          }`}
+          id="file-tab-btn"
+        >
+          <FiFileText className="w-4 h-4" />
+          <span>File Sandbox</span>
         </button>
       </div>
 
@@ -601,6 +677,62 @@ export const Scan = () => {
               >
                 <FiSearch className="w-4 h-4 font-bold" />
                 <span>Analyze Email Security</span>
+              </button>
+            </form>
+          </section>
+        )}
+
+        {/* Tab 4: File Scan Form */}
+        {activeTab === 'file' && (
+          <section className="bg-card dark:bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
+            <div className="flex items-center space-x-3 text-accent border-b border-muted/5 pb-4">
+              <FiFileText className="w-6 h-6" />
+              <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white">APK & Image Threat Scanner</h2>
+            </div>
+            
+            <form onSubmit={handleFileScanSubmit} className="space-y-5">
+              
+              {/* Drag and Drop Box */}
+              <div className="space-y-2">
+                <label className="text-xs font-extrabold uppercase tracking-wide text-muted">
+                  📁 Upload APK file or standard Image
+                </label>
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={handleFileScanDrop}
+                  onClick={() => fileScanInputRef.current?.click()}
+                  className="border-2 border-dashed border-muted/30 hover:border-accent/40 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 transition-colors"
+                  id="file-scan-dropzone"
+                >
+                  <input
+                    ref={fileScanInputRef}
+                    type="file"
+                    accept=".apk,image/jpeg,image/png,image/gif,image/webp"
+                    onChange={handleFileScanChange}
+                    className="hidden"
+                  />
+                  <FiUploadCloud className="w-12 h-12 text-muted mb-2" />
+                  <p className="text-xs font-semibold text-muted">
+                    Drag & drop your file here, or <span className="text-accent underline">browse</span>
+                  </p>
+                  <p className="text-[10px] text-muted/60 mt-1">Accepts Android APK package files (.apk) or image files (.png, .jpg, .webp)</p>
+                </div>
+
+                {fileToScanName && (
+                  <div className="p-3 bg-primary/40 rounded-xl border border-muted/20 text-xs flex justify-between items-center">
+                    <span className="text-muted truncate mr-2">Loaded file:</span>
+                    <span className="font-semibold text-accent font-mono truncate max-w-[300px]">{fileToScanName}</span>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-accent text-primary dark:text-primary font-bold text-sm tracking-wide hover:bg-accent/80 transition-colors shadow-lg shadow-accent/10 cursor-pointer mt-2"
+                id="scan-file-btn"
+              >
+                <FiSearch className="w-4 h-4 font-bold" />
+                <span>Upload & Scan File</span>
               </button>
             </form>
           </section>

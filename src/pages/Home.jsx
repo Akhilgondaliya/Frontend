@@ -53,10 +53,7 @@ export const Home = () => {
     }
   }
 
-  // Calculate how much of line2 (PhishZero + Finds Them.) to show
-  const line2Count = Math.max(0, typeCount - line1.length)
-  const phishZeroCount = Math.min(line2Count, phishZeroLen)
-  const findsThemCount = Math.max(0, line2Count - phishZeroLen)
+
 
   return (
     <div className="min-h-screen overflow-x-hidden flex flex-col justify-between relative">

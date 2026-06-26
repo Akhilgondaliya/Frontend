@@ -38,8 +38,8 @@ export const Contact = () => {
             <div className="flex items-start space-x-3 text-muted">
               <FaGraduationCap className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
               <div className="space-y-0.5">
-                <span className="font-bold text-[#0d1b2a] dark:text-white block">Internship & Project</span>
-                <span>IBM CSRBOX Cybersecurity Internship 2026</span>
+                <span className="font-bold text-[#0d1b2a] dark:text-white block">College</span>
+                <span>Dr. S. & S.S. Ghandhy College of Engg. & Tech.</span>
               </div>
             </div>
 

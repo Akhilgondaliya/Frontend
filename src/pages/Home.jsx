@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FiShield, FiLink, FiCamera, FiLock, FiCalendar, FiFileText, FiArrowRight, FiMail, FiCpu } from 'react-icons/fi'
+import { FiShield, FiLink, FiCamera, FiLock, FiCalendar, FiFileText, FiArrowRight, FiMail, FiCpu, FiImage } from 'react-icons/fi'
 import FeatureCard from '../components/FeatureCard'
 
 // Helper component for counting numbers up on load
@@ -202,9 +202,14 @@ export const Home = () => {
             icon={FiMail}
           />
           <FeatureCard
-            title="APK & Image Sandbox"
-            description="Decompile APK archives for high-risk permissions and check raw images for hidden steganographic URLs."
+            title="APK Binary Sandbox"
+            description="Decompile APK archives to audit high-risk permission declarations and decompile compiled dex files."
             icon={FiCpu}
+          />
+          <FeatureCard
+            title="Image Stego Audit"
+            description="Scan image file headers for suspicious metadata redirects and check trailing steganographic bytes."
+            icon={FiImage}
           />
           <FeatureCard
             title="SSL Connection Audit"

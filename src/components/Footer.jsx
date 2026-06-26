@@ -11,8 +11,8 @@ export const Footer = () => {
           {/* Col 1: Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <FiShield className="w-8 h-8 text-accent" />
-              <span className="text-2xl font-bold tracking-tight text-[#0d1b2a] dark:text-white">
+              <FiShield className="w-6 h-6 text-accent" />
+              <span className="text-xl font-bold tracking-tight text-[#0d1b2a] dark:text-white">
                 Phish<span className="text-accent">Zero</span>
               </span>
             </div>

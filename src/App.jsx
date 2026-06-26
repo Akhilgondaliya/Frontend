@@ -21,6 +21,7 @@ import HowItWorks from './pages/HowItWorks'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Quiz from './pages/Quiz'
+import TyposquattingSimulator from './pages/TyposquattingSimulator'
 
 const AppContent = () => {
   const { theme } = useContext(ThemeContext)
@@ -54,6 +55,7 @@ const AppContent = () => {
             <Route path="/about" element={<PageTransition><About /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
             <Route path="/quiz" element={<PageTransition><Quiz /></PageTransition>} />
+            <Route path="/typosquat-simulator" element={<PageTransition><TyposquattingSimulator /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>

@@ -41,6 +41,7 @@ export const Navbar = () => {
   const links = [
     { name: 'Home', path: '/' },
     { name: 'Scan', path: '/scan' },
+    { name: 'Domain Simulator', path: '/typosquat-simulator' },
     { name: 'Vulnerability Quiz', path: '/quiz' },
     { name: 'How It Works', path: '/how-it-works' },
     { name: 'About', path: '/about' },

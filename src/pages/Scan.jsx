@@ -26,10 +26,15 @@ export const Scan = () => {
   const [mailSubject, setMailSubject] = useState('')
   const [mailBody, setMailBody] = useState('')
   
-  // File Scan States (APKs and Images)
-  const [fileToScan, setFileToScan] = useState(null)
-  const [fileToScanName, setFileToScanName] = useState('')
-  const fileScanInputRef = useRef(null)
+  // Image Scan States
+  const [imageFile, setImageFile] = useState(null)
+  const [imageFileName, setImageFileName] = useState('')
+  const imageInputRef = useRef(null)
+
+  // APK Scan States
+  const [apkFile, setApkFile] = useState(null)
+  const [apkFileName, setApkFileName] = useState('')
+  const apkInputRef = useRef(null)
   
   const videoRef = useRef(null)
   const fileInputRef = useRef(null)
@@ -314,54 +319,106 @@ export const Scan = () => {
     }
   }
 
-  // Handle File Scan Selection
-  const handleFileScanChange = (e) => {
+  // Handle Image Scan Selection
+  const handleImageScanChange = (e) => {
     const file = e.target.files[0]
     if (file) {
       const ext = file.name.split('.').pop().toLowerCase()
-      if (ext === 'apk' || ['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
-        setFileToScan(file)
-        setFileToScanName(file.name)
-        toast.info(`Loaded: ${file.name}`)
+      if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
+        setImageFile(file)
+        setImageFileName(file.name)
+        toast.info(`Loaded image: ${file.name}`)
       } else {
-        toast.error('Please select an APK or standard Image file (PNG, JPG, JPEG, WEBP)')
+        toast.error('Please select a standard Image file (PNG, JPG, JPEG, WEBP)')
       }
     }
   }
 
-  // Handle File Scan Drop
-  const handleFileScanDrop = (e) => {
+  // Handle Image Scan Drop
+  const handleImageScanDrop = (e) => {
     e.preventDefault()
     const file = e.dataTransfer.files[0]
     if (file) {
       const ext = file.name.split('.').pop().toLowerCase()
-      if (ext === 'apk' || ['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
-        setFileToScan(file)
-        setFileToScanName(file.name)
-        toast.info(`Loaded: ${file.name}`)
+      if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) {
+        setImageFile(file)
+        setImageFileName(file.name)
+        toast.info(`Loaded image: ${file.name}`)
       } else {
-        toast.error('Please drop an APK or standard Image file (PNG, JPG, JPEG, WEBP)')
+        toast.error('Please drop a standard Image file (PNG, JPG, JPEG, WEBP)')
       }
     }
   }
 
-  // Submit File scan
-  const handleFileScanSubmit = async (e) => {
+  // Submit Image Scan
+  const handleImageScanSubmit = async (e) => {
     e.preventDefault()
-    if (!fileToScan) {
-      toast.error('Please select or drop a file first.')
+    if (!imageFile) {
+      toast.error('Please select or drop an image first.')
       return
     }
 
     const formData = new FormData()
-    formData.append('file', fileToScan)
+    formData.append('file', imageFile)
 
     try {
       const data = await scanFile(formData).unwrap()
-      toast.success('File scanned successfully!')
+      toast.success('Image scanned successfully!')
       navigate('/result-file', { state: { scanResult: data } })
     } catch (err) {
-      const errMsg = err.data?.error || 'Oops, our server had trouble scanning this file. Make sure the backend is active.'
+      const errMsg = err.data?.error || 'Oops, our server had trouble scanning this image. Make sure the backend is active.'
+      toast.error(errMsg)
+    }
+  }
+
+  // Handle APK Scan Selection
+  const handleApkScanChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const ext = file.name.split('.').pop().toLowerCase()
+      if (ext === 'apk') {
+        setApkFile(file)
+        setApkFileName(file.name)
+        toast.info(`Loaded APK: ${file.name}`)
+      } else {
+        toast.error('Please select an Android APK file (.apk)')
+      }
+    }
+  }
+
+  // Handle APK Scan Drop
+  const handleApkScanDrop = (e) => {
+    e.preventDefault()
+    const file = e.dataTransfer.files[0]
+    if (file) {
+      const ext = file.name.split('.').pop().toLowerCase()
+      if (ext === 'apk') {
+        setApkFile(file)
+        setApkFileName(file.name)
+        toast.info(`Loaded APK: ${file.name}`)
+      } else {
+        toast.error('Please drop an Android APK file (.apk)')
+      }
+    }
+  }
+
+  // Submit APK Scan
+  const handleApkScanSubmit = async (e) => {
+    e.preventDefault()
+    if (!apkFile) {
+      toast.error('Please select or drop an APK file first.')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('file', apkFile)
+
+    try {
+      const data = await scanFile(formData).unwrap()
+      toast.success('APK scanned successfully!')
+      navigate('/result-file', { state: { scanResult: data } })
+    } catch (err) {
+      const errMsg = err.data?.error || 'Oops, our server had trouble scanning this APK file. Make sure the backend is active.'
       toast.error(errMsg)
     }
   }
@@ -397,7 +454,7 @@ export const Scan = () => {
       </div>
 
       {/* Tab Navigation Menu */}
-      <div className="flex justify-center border-b border-muted/10 max-w-xl mx-auto">
+      <div className="flex justify-center border-b border-muted/10 max-w-3xl mx-auto flex-wrap">
         <button
           onClick={() => {
             stopCamera()
@@ -439,15 +496,28 @@ export const Scan = () => {
         <button
           onClick={() => {
             stopCamera()
-            setActiveTab('file')
+            setActiveTab('image')
           }}
           className={`flex items-center space-x-2 px-6 py-3 border-b-2 text-sm font-extrabold tracking-wide transition-all cursor-pointer ${
-            activeTab === 'file' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-[#0d1b2a] dark:hover:text-white'
+            activeTab === 'image' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-[#0d1b2a] dark:hover:text-white'
           }`}
-          id="file-tab-btn"
+          id="image-tab-btn"
+        >
+          <FiCamera className="w-4 h-4" />
+          <span>Image Threat</span>
+        </button>
+        <button
+          onClick={() => {
+            stopCamera()
+            setActiveTab('apk')
+          }}
+          className={`flex items-center space-x-2 px-6 py-3 border-b-2 text-sm font-extrabold tracking-wide transition-all cursor-pointer ${
+            activeTab === 'apk' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-[#0d1b2a] dark:hover:text-white'
+          }`}
+          id="apk-tab-btn"
         >
           <FiFileText className="w-4 h-4" />
-          <span>File Sandbox</span>
+          <span>APK Sandbox</span>
         </button>
       </div>
 
@@ -682,46 +752,46 @@ export const Scan = () => {
           </section>
         )}
 
-        {/* Tab 4: File Scan Form */}
-        {activeTab === 'file' && (
+        {/* Tab 4: Image Threat Scan Form */}
+        {activeTab === 'image' && (
           <section className="bg-card dark:bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
             <div className="flex items-center space-x-3 text-accent border-b border-muted/5 pb-4">
-              <FiFileText className="w-6 h-6" />
-              <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white">APK & Image Threat Scanner</h2>
+              <FiCamera className="w-6 h-6" />
+              <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white">Image Threat Scanner</h2>
             </div>
             
-            <form onSubmit={handleFileScanSubmit} className="space-y-5">
+            <form onSubmit={handleImageScanSubmit} className="space-y-5">
               
               {/* Drag and Drop Box */}
               <div className="space-y-2">
                 <label className="text-xs font-extrabold uppercase tracking-wide text-muted">
-                  📁 Upload APK file or standard Image
+                  📷 Upload standard Image file
                 </label>
                 <div
                   onDragOver={(e) => e.preventDefault()}
-                  onDrop={handleFileScanDrop}
-                  onClick={() => fileScanInputRef.current?.click()}
+                  onDrop={handleImageScanDrop}
+                  onClick={() => imageInputRef.current?.click()}
                   className="border-2 border-dashed border-muted/30 hover:border-accent/40 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 transition-colors"
-                  id="file-scan-dropzone"
+                  id="image-scan-dropzone"
                 >
                   <input
-                    ref={fileScanInputRef}
+                    ref={imageInputRef}
                     type="file"
-                    accept=".apk,image/jpeg,image/png,image/gif,image/webp"
-                    onChange={handleFileScanChange}
+                    accept="image/jpeg,image/png,image/gif,image/webp"
+                    onChange={handleImageScanChange}
                     className="hidden"
                   />
                   <FiUploadCloud className="w-12 h-12 text-muted mb-2" />
                   <p className="text-xs font-semibold text-muted">
-                    Drag & drop your file here, or <span className="text-accent underline">browse</span>
+                    Drag & drop your image here, or <span className="text-accent underline">browse</span>
                   </p>
-                  <p className="text-[10px] text-muted/60 mt-1">Accepts Android APK package files (.apk) or image files (.png, .jpg, .webp)</p>
+                  <p className="text-[10px] text-muted/60 mt-1">Accepts standard images (PNG, JPG, JPEG, or WEBP)</p>
                 </div>
 
-                {fileToScanName && (
+                {imageFileName && (
                   <div className="p-3 bg-primary/40 rounded-xl border border-muted/20 text-xs flex justify-between items-center">
                     <span className="text-muted truncate mr-2">Loaded file:</span>
-                    <span className="font-semibold text-accent font-mono truncate max-w-[300px]">{fileToScanName}</span>
+                    <span className="font-semibold text-accent font-mono truncate max-w-[300px]">{imageFileName}</span>
                   </div>
                 )}
               </div>
@@ -729,10 +799,66 @@ export const Scan = () => {
               <button
                 type="submit"
                 className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-accent text-primary dark:text-primary font-bold text-sm tracking-wide hover:bg-accent/80 transition-colors shadow-lg shadow-accent/10 cursor-pointer mt-2"
-                id="scan-file-btn"
+                id="scan-image-file-btn"
               >
                 <FiSearch className="w-4 h-4 font-bold" />
-                <span>Upload & Scan File</span>
+                <span>Upload & Scan Image</span>
+              </button>
+            </form>
+          </section>
+        )}
+
+        {/* Tab 5: APK Threat Scan Form */}
+        {activeTab === 'apk' && (
+          <section className="bg-card dark:bg-card border border-muted/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
+            <div className="flex items-center space-x-3 text-accent border-b border-muted/5 pb-4">
+              <FiFileText className="w-6 h-6" />
+              <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white">APK Sandbox Scanner</h2>
+            </div>
+            
+            <form onSubmit={handleApkScanSubmit} className="space-y-5">
+              
+              {/* Drag and Drop Box */}
+              <div className="space-y-2">
+                <label className="text-xs font-extrabold uppercase tracking-wide text-muted">
+                  📁 Upload Android APK package file
+                </label>
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={handleApkScanDrop}
+                  onClick={() => apkInputRef.current?.click()}
+                  className="border-2 border-dashed border-muted/30 hover:border-accent/40 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-primary/10 transition-colors"
+                  id="apk-scan-dropzone"
+                >
+                  <input
+                    ref={apkInputRef}
+                    type="file"
+                    accept=".apk"
+                    onChange={handleApkScanChange}
+                    className="hidden"
+                  />
+                  <FiUploadCloud className="w-12 h-12 text-muted mb-2" />
+                  <p className="text-xs font-semibold text-muted">
+                    Drag & drop your APK file here, or <span className="text-accent underline">browse</span>
+                  </p>
+                  <p className="text-[10px] text-muted/60 mt-1">Accepts Android app packages (.apk)</p>
+                </div>
+
+                {apkFileName && (
+                  <div className="p-3 bg-primary/40 rounded-xl border border-muted/20 text-xs flex justify-between items-center">
+                    <span className="text-muted truncate mr-2">Loaded file:</span>
+                    <span className="font-semibold text-accent font-mono truncate max-w-[300px]">{apkFileName}</span>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-accent text-primary dark:text-primary font-bold text-sm tracking-wide hover:bg-accent/80 transition-colors shadow-lg shadow-accent/10 cursor-pointer mt-2"
+                id="scan-apk-file-btn"
+              >
+                <FiSearch className="w-4 h-4 font-bold" />
+                <span>Upload & Scan APK</span>
               </button>
             </form>
           </section>

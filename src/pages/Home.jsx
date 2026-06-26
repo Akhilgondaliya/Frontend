@@ -41,35 +41,7 @@ const StatCounter = ({ endValue, prefix = '', suffix = '' }) => {
 }
 
 export const Home = () => {
-  const [typeCount, setTypeCount] = useState(0)
-
-  const line1 = "Links Lie. Scammers Hide."
-  // Line 2 is rendered with styled PhishZero after line1 finishes
-  const line2Text = " Finds Them."
-  const phishZeroLen = 9 // "PhishZero" length
-  const totalLength = line1.length + phishZeroLen + line2Text.length
-
-  // Typewriter effect (Safe from React StrictMode double-rendering)
-  useEffect(() => {
-    let count = 0
-    let isMounted = true
-    let timeoutId = null
-
-    const typeCharacter = () => {
-      if (count <= totalLength && isMounted) {
-        setTypeCount(count)
-        count++
-        timeoutId = setTimeout(typeCharacter, 70)
-      }
-    }
-
-    typeCharacter()
-
-    return () => {
-      isMounted = false
-      if (timeoutId) clearTimeout(timeoutId)
-    }
-  }, [])
+  // Framer Motion staggered animations will be used for the heading
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -100,30 +72,24 @@ export const Home = () => {
               <span>Smart website security scanning</span>
             </div>
             
-            {/* Typing effect title */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white min-h-[120px] sm:min-h-[160px] leading-tight">
-              {/* Line 1: Links Lie. Scammers Hide. */}
-              <span>{line1.slice(0, typeCount)}</span>
-              
-              {/* Line 2: PhishZero Finds Them. */}
-              {typeCount > line1.length && (
-                <span className="block mt-2 sm:mt-4">
-                  {/* "Phish" part — inherits dark/white text */}
-                  <span>{"Phish".slice(0, Math.min(phishZeroCount, 5))}</span>
-                  {/* "Zero" part — accent color */}
-                  {phishZeroCount > 5 && (
-                    <span className="text-accent">{"Zero".slice(0, phishZeroCount - 5)}</span>
-                  )}
-                  {/* " Finds Them." part */}
-                  {findsThemCount > 0 && (
-                    <span>{line2Text.slice(0, findsThemCount)}</span>
-                  )}
-                </span>
-              )}
-              
-              {typeCount < totalLength && (
-                <span className="text-accent animate-pulse font-light ml-1">|</span>
-              )}
+            {/* Staggered text fade-in-up animation */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white leading-tight">
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, ease: 'easeOut' }}
+                className="block"
+              >
+                Links Lie. Scammers Hide.
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.35, ease: 'easeOut' }}
+                className="block mt-2 sm:mt-4 text-[#00d4ff] dark:text-[#00d4ff]"
+              >
+                <span className="text-[#0d1b2a] dark:text-white">Phish</span>Zero<span className="text-[#0d1b2a] dark:text-white"> Finds Them.</span>
+              </motion.span>
             </h1>
             
             <p className="text-base sm:text-lg text-muted max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">

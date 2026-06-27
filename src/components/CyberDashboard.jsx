@@ -61,10 +61,10 @@ export const CyberDashboard = () => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 py-6 w-full">
-      {/* Today's Scans */}
+      {/* Total Scans */}
       <div className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between hover:border-accent/30 transition-all duration-300 shadow-md">
         <div className="flex items-center justify-between text-muted">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider">Today's Scans</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider">Total Scans</span>
           <FiActivity className="w-4 h-4 text-accent animate-pulse" />
         </div>
         <div className="mt-2">

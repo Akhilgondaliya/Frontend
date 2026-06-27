@@ -22,7 +22,6 @@ import {
 } from "../app/apiSlice";
 import jsQR from "jsqr";
 import LoadingSpinner from "../components/LoadingSpinner";
-import CyberDashboard from "../components/CyberDashboard";
 
 export const Scan = () => {
   const navigate = useNavigate();
@@ -527,11 +526,6 @@ export const Scan = () => {
           diagnostics, or sandbox APK binaries & images inside our threat
           defense console.
         </p>
-      </div>
-
-      {/* Statistics dashboard metrics */}
-      <div className="max-w-4xl mx-auto">
-        <CyberDashboard />
       </div>
 
       {/* Tab Navigation Menu (Segmented capsule list) */}

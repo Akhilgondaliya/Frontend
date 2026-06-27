@@ -61,9 +61,9 @@ export const Navbar = () => {
             
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group focus:outline-none" id="navbar-logo">
-              <FiShield className="w-6 h-6 text-accent transition-transform duration-300 group-hover:scale-110" />
+              <FiShield className="w-6 h-6 text-[#00d4ff] transition-transform duration-300 group-hover:scale-110" />
               <span className="text-xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white">
-                Phish<span className="text-accent">Zero</span>
+                Phish<span className="text-[#00d4ff]">Zero</span>
               </span>
             </Link>
   

@@ -6,6 +6,7 @@ import { FiLink, FiCamera, FiUploadCloud, FiSearch, FiVideo, FiVideoOff, FiMail,
 import { useScanUrlMutation, useScanQrMutation, useScanMailMutation, useScanFileMutation } from '../app/apiSlice'
 import jsQR from 'jsqr'
 import LoadingSpinner from '../components/LoadingSpinner'
+import CyberDashboard from '../components/CyberDashboard'
 
 export const Scan = () => {
   const navigate = useNavigate()
@@ -470,6 +471,11 @@ export const Scan = () => {
         <p className="text-sm sm:text-base text-muted leading-relaxed max-w-2xl mx-auto">
           Audit suspicious websites, parse hidden QR vectors, run email spoofing diagnostics, or sandbox APK binaries & images inside our threat defense console.
         </p>
+      </div>
+
+      {/* Statistics dashboard metrics */}
+      <div className="max-w-4xl mx-auto">
+        <CyberDashboard />
       </div>
 
       {/* Tab Navigation Menu (Segmented capsule list) */}

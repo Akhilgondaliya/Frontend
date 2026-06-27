@@ -50,6 +50,10 @@ export const apiSlice = createApi({
         body: formData,
       }),
     }),
+    // GET /api/stats -> returns activity counters
+    getStats: builder.query({
+      query: () => '/api/stats',
+    }),
   }),
 })
 
@@ -58,5 +62,6 @@ export const {
   useScanQrMutation,
   useScanMailMutation,
   useScanFileMutation,
-  useLazyDownloadReportQuery
+  useLazyDownloadReportQuery,
+  useGetStatsQuery
 } = apiSlice

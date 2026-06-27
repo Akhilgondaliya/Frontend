@@ -4,8 +4,14 @@ import { toast } from 'react-toastify'
 import { motion } from 'framer-motion'
 import { FiDownload, FiRefreshCw, FiCopy, FiLock, FiCalendar, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi'
 import VerdictBanner from '../components/VerdictBanner'
-import RiskMeter from '../components/RiskMeter'
+import AnimatedRiskMeter from '../components/AnimatedRiskMeter'
 import SignalCard from '../components/SignalCard'
+import UrlBreakdown from '../components/UrlBreakdown'
+import DetectionPipeline from '../components/DetectionPipeline'
+import SecurityChecklist from '../components/SecurityChecklist'
+import ThreatTimeline from '../components/ThreatTimeline'
+import ExplainableReasons from '../components/ExplainableReasons'
+import SecurityTips from '../components/SecurityTips'
 
 export const Result = () => {
   const location = useLocation()
@@ -24,7 +30,7 @@ export const Result = () => {
     return null // Will redirect in useEffect
   }
 
-  const { url, score, verdict, results = [], ssl = {}, whois = {} } = scanResult
+  const { url, score, verdict, results = [], ssl = {}, whois = {}, scan_duration = 0.08, ip_address = 'Unavailable', confidence = 95 } = scanResult
 
   // Copy result details to clipboard
   const handleCopyResultUrl = () => {
@@ -116,6 +122,31 @@ export const Result = () => {
     scoreBgColor = 'bg-suspicious'
   }
 
+  const getRecommendations = () => {
+    if (verdict === 'Phishing') {
+      return [
+        'DO NOT ENTER passwords, credit cards, or logins on this website.',
+        'Avoid downloading any files or software installers from this source.',
+        'Verify the domain name character-by-character to check for homoglyphs.',
+        'Report this website immediately to security authorities or your IT administrator.'
+      ]
+    } else if (verdict === 'Suspicious') {
+      return [
+        'Exercise high caution before submitting any inputs on this page.',
+        'Confirm the sender or source of this link through a secondary verified channel.',
+        'Check the SSL certificate details for warning messages or recent registrations.'
+      ]
+    } else {
+      return [
+        'This website exhibits standard security indicators. Proceed safely.',
+        'Ensure browser anti-phishing filters are active for general navigation protection.',
+        'Verify sensitive requests (payments, password resets) independently.'
+      ]
+    }
+  }
+
+  const isBrandImpersonation = results.some(r => r.name === 'Brand Impersonation' && r.triggered)
+
   return (
     <div className="min-h-screen py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
       
@@ -151,6 +182,61 @@ export const Result = () => {
         </div>
       </div>
 
+      {/* Brand Impersonation Alert Banner */}
+      {isBrandImpersonation && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-4 bg-phishing/10 border border-phishing rounded-2xl flex items-start space-x-3 text-left shadow-lg shadow-phishing/5"
+        >
+          <FiAlertTriangle className="w-6 h-6 text-phishing flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 className="text-sm font-extrabold text-phishing uppercase tracking-wider">⚠ Possible Brand Impersonation Detected</h4>
+            <p className="text-xs text-muted mt-1 leading-relaxed font-semibold">
+              CRITICAL: This website's address appears to mimic a popular brand (like PayPal or Google) but does not resolve to their official registry domain. This is a common tactic for credential stealing.
+            </p>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Scan Summary Dashboard */}
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Threat Level</span>
+          <span className={`text-base font-extrabold block mt-2 uppercase ${
+            score >= 70 ? 'text-phishing' : score >= 40 ? 'text-suspicious' : 'text-safe'
+          }`}>
+            {score >= 70 ? 'Danger' : score >= 40 ? 'Warning' : 'Safe'}
+          </span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Risk Score</span>
+          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">{score} / 100</span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Confidence</span>
+          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">{confidence}%</span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Scan Duration</span>
+          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">{scan_duration}s</span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Domain Age</span>
+          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">
+            {whois.age_days !== undefined ? `${whois.age_days}d` : 'N/A'}
+          </span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm col-span-2 md:col-span-1 text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Final Verdict</span>
+          <span className={`text-base font-extrabold block mt-2 uppercase ${
+            score >= 70 ? 'text-phishing' : score >= 40 ? 'text-suspicious' : 'text-safe'
+          }`}>
+            {verdict}
+          </span>
+        </div>
+      </div>
+
       {/* Main Verdict Summary Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
          
@@ -161,7 +247,7 @@ export const Result = () => {
 
         {/* Risk score gauge: takes 4 cols */}
         <div className="lg:col-span-4 h-full flex items-center justify-center">
-          <RiskMeter score={score} />
+          <AnimatedRiskMeter score={score} confidence={confidence} />
         </div>
 
       </div>
@@ -206,6 +292,18 @@ export const Result = () => {
         </div>
       </section>
 
+      {/* Detection Pipeline progression */}
+      <DetectionPipeline />
+
+      {/* URL Diagnostics Breakdown Cards */}
+      <UrlBreakdown 
+        url={url} 
+        ipAddress={ip_address} 
+        registrar={whois.registrar} 
+        whoisError={whois.error} 
+        sslError={ssl.error} 
+      />
+
       {/* SSL & WHOIS Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
@@ -216,7 +314,7 @@ export const Result = () => {
             <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">SSL Connection & Security</h3>
           </div>
           
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-2 gap-4 text-sm text-left">
             <div className="space-y-1">
               <span className="text-xs text-muted block">Connection Status</span>
               <span className={`inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
@@ -243,7 +341,7 @@ export const Result = () => {
           </div>
 
           {ssl.warning && (
-            <div className="flex items-start space-x-2 p-3 bg-phishing/5 border border-phishing/30 text-phishing rounded-xl text-xs">
+            <div className="flex items-start space-x-2 p-3 bg-phishing/5 border border-phishing/30 text-phishing rounded-xl text-xs text-left">
               <FiAlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <p className="leading-relaxed">
                 <b>Caution:</b> This site's security certificate is expiring in less than 30 days. Short-lived certificates are frequently used on temporary scam pages.
@@ -252,7 +350,7 @@ export const Result = () => {
           )}
 
           {ssl.error && (
-            <div className="p-3 bg-primary/20 text-muted rounded-xl text-[11px] leading-relaxed">
+            <div className="p-3 bg-primary/20 text-muted rounded-xl text-[11px] leading-relaxed text-left">
               <b>Connection Log:</b> {ssl.error === "HTTP protocol used (No SSL)" ? "The website uses plain HTTP, meaning data sent to it is not encrypted." : ssl.error}
             </div>
           )}
@@ -265,7 +363,7 @@ export const Result = () => {
             <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">Domain Registration details</h3>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-2 gap-4 text-sm text-left">
             <div className="space-y-1">
               <span className="text-xs text-muted block">Website Age</span>
               <span className="font-extrabold text-[#0d1b2a] dark:text-white font-mono block">
@@ -297,7 +395,7 @@ export const Result = () => {
           </div>
 
           {whois.points > 0 && (
-            <div className="flex items-start space-x-2 p-3 bg-suspicious/5 border border-suspicious/30 text-suspicious rounded-xl text-xs">
+            <div className="flex items-start space-x-2 p-3 bg-suspicious/5 border border-suspicious/30 text-suspicious rounded-xl text-xs text-left">
               <FiAlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <p className="leading-relaxed">
                 <b>Caution:</b> This website was registered very recently. Scam sites are often created, used for a few days, and then abandoned.
@@ -306,7 +404,7 @@ export const Result = () => {
           )}
 
           {whois.error && (
-            <div className="p-3 bg-primary/20 text-muted rounded-xl text-[11px] leading-relaxed">
+            <div className="p-3 bg-primary/20 text-muted rounded-xl text-[11px] leading-relaxed text-left">
               <b>Registry Log:</b> Could not pull database logs (this often happens when WHOIS servers rate-limit requests).
             </div>
           )}
@@ -314,13 +412,38 @@ export const Result = () => {
 
       </div>
 
+      {/* Security Checklist Table */}
+      <SecurityChecklist scanResult={scanResult} />
+
+      {/* Security Timeline */}
+      <ThreatTimeline whois={whois} ssl={ssl} />
+
+      {/* Explainable Reasons Diagnosis Deck */}
+      <ExplainableReasons scanResult={scanResult} />
+
+      {/* Dynamic Security Recommendations */}
+      <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-3xl p-6 shadow-md text-left space-y-4">
+        <h3 className="text-sm font-extrabold uppercase tracking-wider text-muted">Cybersecurity Recommendations</h3>
+        <ul className="space-y-3 text-xs">
+          {getRecommendations().map((rec, idx) => (
+            <li key={idx} className="flex items-start space-x-2 text-muted font-semibold">
+              <span className="text-accent font-extrabold">&#9656;</span>
+              <span>{rec}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Random Security Tips Callout */}
+      <SecurityTips />
+
       {/* 13 Heuristic checks grid */}
       <section className="space-y-6">
         <div className="border-b border-muted/20 pb-3">
-          <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white">
-            Security Checklist Results
+          <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white text-left">
+            Raw Heuristic Signal Cards
           </h2>
-          <p className="text-xs text-muted">A detailed look at the 13 safety checks we run on the link structure.</p>
+          <p className="text-xs text-muted text-left">A detailed look at the 13 safety checks we run on the link structure.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

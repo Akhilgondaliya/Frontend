@@ -4,7 +4,11 @@ import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { motion } from 'framer-motion'
 import { FiArrowLeft, FiAlertTriangle, FiCheckCircle, FiShield, FiFileText, FiLink, FiInfo, FiActivity, FiDownload } from 'react-icons/fi'
-import RiskMeter from '../components/RiskMeter'
+import AnimatedRiskMeter from '../components/AnimatedRiskMeter'
+import SecurityChecklist from '../components/SecurityChecklist'
+import ThreatTimeline from '../components/ThreatTimeline'
+import ExplainableReasons from '../components/ExplainableReasons'
+import SecurityTips from '../components/SecurityTips'
 
 export const ResultFile = () => {
   const location = useLocation()
@@ -170,7 +174,7 @@ export const ResultFile = () => {
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-muted">Analysis Verdict</h3>
             
             <div className="flex justify-center">
-              <RiskMeter score={score} borderless={true} />
+              <AnimatedRiskMeter score={score} confidence={95} borderless={true} />
             </div>
 
             <div className={`p-4 rounded-2xl border ${themeColor} flex items-center justify-center space-x-2.5`}>
@@ -414,6 +418,14 @@ export const ResultFile = () => {
 
         </div>
 
+      </div>
+
+      {/* Full-width visual panels for File Sandbox Scan */}
+      <div className="space-y-8">
+        <SecurityChecklist scanResult={scanResult} />
+        <ThreatTimeline whois={scanResult.whois || {}} ssl={scanResult.ssl || {}} />
+        <ExplainableReasons scanResult={scanResult} />
+        <SecurityTips />
       </div>
 
     </div>

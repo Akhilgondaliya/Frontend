@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
@@ -10,6 +10,10 @@ import {
   FiCalendar,
   FiAlertTriangle,
   FiCheckCircle,
+  FiEye,
+  FiImage,
+  FiMonitor,
+  FiAlertCircle,
 } from "react-icons/fi";
 import VerdictBanner from "../components/VerdictBanner";
 import AnimatedRiskMeter from "../components/AnimatedRiskMeter";
@@ -25,6 +29,7 @@ export const Result = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const scanResult = location.state?.scanResult;
+  const [previewMode, setPreviewMode] = useState("screenshot");
 
   // Redirect to scan if no results are in history state
   useEffect(() => {
@@ -380,6 +385,103 @@ export const Result = () => {
         whoisError={whois.error}
         sslError={ssl.error}
       />
+
+      {/* Secure Website Preview Section */}
+      <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md hover:border-accent/30 transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-muted/5 pb-4">
+          <div className="flex items-center space-x-2 text-accent">
+            <FiEye className="w-5 h-5" />
+            <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">
+              Secure Website Preview
+            </h3>
+          </div>
+          
+          {/* Switcher Tabs */}
+          <div className="flex bg-primary/20 p-1 rounded-xl self-start sm:self-auto">
+            <button
+              onClick={() => setPreviewMode("screenshot")}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                previewMode === "screenshot"
+                  ? "bg-accent text-primary shadow-sm"
+                  : "text-muted hover:text-accent"
+              }`}
+            >
+              <FiImage className="w-3.5 h-3.5" />
+              <span>Safe Capture (Screenshot)</span>
+            </button>
+            <button
+              onClick={() => setPreviewMode("sandbox")}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                previewMode === "sandbox"
+                  ? "bg-accent text-primary shadow-sm"
+                  : "text-muted hover:text-accent"
+              }`}
+            >
+              <FiMonitor className="w-3.5 h-3.5" />
+              <span>Interactive Sandbox</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Warning / Explanation Banner */}
+        <div className="flex items-start space-x-3 p-4 bg-primary/30 border border-muted/20 rounded-2xl text-xs text-left">
+          <FiAlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="font-extrabold text-[#0d1b2a] dark:text-white">
+              {previewMode === "screenshot" 
+                ? "Static Screen Capture Mode" 
+                : "Strict Isolated Sandbox Mode"}
+            </p>
+            <p className="text-muted leading-relaxed font-semibold">
+              {previewMode === "screenshot"
+                ? "This is a safe, server-side visual screenshot of the destination. No code runs on your device, making it 100% secure even for active malware or phishing pages."
+                : "The site is loaded inside a strictly sandboxed container. Script execution, form submissions, cookie storage, and popups are completely blocked to prevent drive-by attacks."}
+            </p>
+          </div>
+        </div>
+
+        {/* Browser Mock Window Frame */}
+        <div className="border border-muted/20 dark:border-accent/10 rounded-2xl overflow-hidden bg-[#060b14]/40 shadow-inner flex flex-col">
+          {/* Browser Address Bar */}
+          <div className="bg-[#0b1322] border-b border-muted/20 dark:border-accent/10 px-4 py-3 flex items-center space-x-3">
+            <div className="flex space-x-1.5 flex-shrink-0">
+              <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+              <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+              <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+            </div>
+            <div className="bg-[#060b14]/70 border border-muted/10 dark:border-accent/5 rounded-lg px-3 py-1 flex items-center space-x-2 text-xs text-muted w-full overflow-hidden truncate font-mono select-all">
+              <FiLock className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+              <span className="truncate">{url}</span>
+            </div>
+          </div>
+
+          {/* Browser Body / Preview Content */}
+          <div className="relative aspect-video w-full bg-[#060b14]/10 min-h-[300px] sm:min-h-[450px] flex items-center justify-center overflow-auto">
+            {previewMode === "screenshot" ? (
+              <div className="w-full h-full relative">
+                <img
+                  src={`https://image.thum.io/get/width/1280/crop/800/maxAge/12/${url}`}
+                  alt="Safe screenshot preview of the scanned URL"
+                  className="w-full h-full object-cover object-top select-none"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://mini.s-shot.ru/1024x768/PNG/1024/?${url}`;
+                  }}
+                />
+              </div>
+            ) : (
+              <iframe
+                src={url}
+                title="PhishZero Isolated Sandbox URL Preview"
+                sandbox=""
+                referrerPolicy="no-referrer"
+                className="w-full h-full border-none bg-white min-h-[300px] sm:min-h-[450px]"
+              />
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* SSL & WHOIS Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

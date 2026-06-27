@@ -7,10 +7,11 @@ import {
   FiPercent,
 } from "react-icons/fi";
 import { useGetStatsQuery } from "../app/apiSlice";
+import { mergeStatsWithLocal } from "../utils/localStats";
 
 export const CyberDashboard = () => {
   const {
-    data: stats = {
+    data: serverStats = {
       today_scans: 0,
       threats_detected: 0,
       safe_urls: 0,
@@ -23,6 +24,20 @@ export const CyberDashboard = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
+  const [localStatsVersion, setLocalStatsVersion] = useState(0);
+  const stats = mergeStatsWithLocal(serverStats, localStatsVersion);
+
+  useEffect(() => {
+    const handleLocalStatsUpdate = () => {
+      setLocalStatsVersion((version) => version + 1);
+    };
+
+    window.addEventListener("phishzero-stats-updated", handleLocalStatsUpdate);
+    return () => {
+      window.removeEventListener("phishzero-stats-updated", handleLocalStatsUpdate);
+    };
+  }, []);
 
   const [counts, setCounts] = useState({
     today_scans: 0,
@@ -38,6 +53,7 @@ export const CyberDashboard = () => {
     const stepTime = duration / steps;
 
     let step = 0;
+    const start = { ...counts };
     const timer = setInterval(() => {
       step++;
       if (step >= steps) {
@@ -46,19 +62,37 @@ export const CyberDashboard = () => {
       } else {
         const factor = step / steps;
         setCounts({
-          today_scans: Math.floor(stats.today_scans * factor),
-          threats_detected: Math.floor(stats.threats_detected * factor),
-          safe_urls: Math.floor(stats.safe_urls * factor),
-          qr_scans: Math.floor(stats.qr_scans * factor),
+          today_scans: Math.round(
+            start.today_scans + (stats.today_scans - start.today_scans) * factor,
+          ),
+          threats_detected: Math.round(
+            start.threats_detected +
+              (stats.threats_detected - start.threats_detected) * factor,
+          ),
+          safe_urls: Math.round(
+            start.safe_urls + (stats.safe_urls - start.safe_urls) * factor,
+          ),
+          qr_scans: Math.round(
+            start.qr_scans + (stats.qr_scans - start.qr_scans) * factor,
+          ),
           average_risk_score: parseFloat(
-            (stats.average_risk_score * factor).toFixed(1),
+            (
+              start.average_risk_score +
+              (stats.average_risk_score - start.average_risk_score) * factor
+            ).toFixed(1),
           ),
         });
       }
     }, stepTime);
 
     return () => clearInterval(timer);
-  }, [stats]);
+  }, [
+    stats.today_scans,
+    stats.threats_detected,
+    stats.safe_urls,
+    stats.qr_scans,
+    stats.average_risk_score,
+  ]);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 py-6 w-full">

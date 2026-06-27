@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { recordLocalScan } from "../utils/localStats";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -16,6 +17,15 @@ export const apiSlice = createApi({
         body,
       }),
       invalidatesTags: ["Stats"],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          recordLocalScan(data?.score ?? 0, { scanType: "url" });
+          dispatch(apiSlice.endpoints.getStats.initiate(undefined, { forceRefetch: true }));
+        } catch {
+          // Ignore failed scans
+        }
+      },
     }),
     // POST /api/scan-qr -> Body: FormData (qr_image)
     scanQr: builder.mutation({
@@ -26,6 +36,15 @@ export const apiSlice = createApi({
         // RTK Query/Fetch handles FormData content headers automatically
       }),
       invalidatesTags: ["Stats"],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          recordLocalScan(data?.score ?? 0, { scanType: "qr" });
+          dispatch(apiSlice.endpoints.getStats.initiate(undefined, { forceRefetch: true }));
+        } catch {
+          // Ignore failed scans
+        }
+      },
     }),
     // GET /api/report?url=... -> returns PDF report blob
     downloadReport: builder.query({
@@ -45,6 +64,15 @@ export const apiSlice = createApi({
         body,
       }),
       invalidatesTags: ["Stats"],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          recordLocalScan(data?.score ?? 0, { scanType: "mail" });
+          dispatch(apiSlice.endpoints.getStats.initiate(undefined, { forceRefetch: true }));
+        } catch {
+          // Ignore failed scans
+        }
+      },
     }),
     // POST /api/scan-file -> Body: FormData (file)
     scanFile: builder.mutation({
@@ -54,6 +82,15 @@ export const apiSlice = createApi({
         body: formData,
       }),
       invalidatesTags: ["Stats"],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          recordLocalScan(data?.score ?? 0, { scanType: "file" });
+          dispatch(apiSlice.endpoints.getStats.initiate(undefined, { forceRefetch: true }));
+        } catch {
+          // Ignore failed scans
+        }
+      },
     }),
     // GET /api/stats -> returns activity counters
     getStats: builder.query({

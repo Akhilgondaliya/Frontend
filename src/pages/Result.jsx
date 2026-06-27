@@ -1,155 +1,191 @@
-import React, { useEffect } from 'react'
-import { useLocation, useNavigate, Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { motion } from 'framer-motion'
-import { FiDownload, FiRefreshCw, FiCopy, FiLock, FiCalendar, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi'
-import VerdictBanner from '../components/VerdictBanner'
-import AnimatedRiskMeter from '../components/AnimatedRiskMeter'
-import SignalCard from '../components/SignalCard'
-import UrlBreakdown from '../components/UrlBreakdown'
-import DetectionPipeline from '../components/DetectionPipeline'
-import SecurityChecklist from '../components/SecurityChecklist'
-import ThreatTimeline from '../components/ThreatTimeline'
-import ExplainableReasons from '../components/ExplainableReasons'
-import SecurityTips from '../components/SecurityTips'
+import React, { useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { motion } from "framer-motion";
+import {
+  FiDownload,
+  FiRefreshCw,
+  FiCopy,
+  FiLock,
+  FiCalendar,
+  FiAlertTriangle,
+  FiCheckCircle,
+} from "react-icons/fi";
+import VerdictBanner from "../components/VerdictBanner";
+import AnimatedRiskMeter from "../components/AnimatedRiskMeter";
+import SignalCard from "../components/SignalCard";
+import UrlBreakdown from "../components/UrlBreakdown";
+import DetectionPipeline from "../components/DetectionPipeline";
+import SecurityChecklist from "../components/SecurityChecklist";
+import ThreatTimeline from "../components/ThreatTimeline";
+import ExplainableReasons from "../components/ExplainableReasons";
+import SecurityTips from "../components/SecurityTips";
 
 export const Result = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const scanResult = location.state?.scanResult
+  const location = useLocation();
+  const navigate = useNavigate();
+  const scanResult = location.state?.scanResult;
 
   // Redirect to scan if no results are in history state
   useEffect(() => {
     if (!scanResult) {
-      toast.error('No scan results found. Let\'s start a new scan first.')
-      navigate('/scan')
+      toast.error("No scan results found. Let's start a new scan first.");
+      navigate("/scan");
     }
-  }, [scanResult, navigate])
+  }, [scanResult, navigate]);
 
   if (!scanResult) {
-    return null // Will redirect in useEffect
+    return null; // Will redirect in useEffect
   }
 
-  const { url, score, verdict, results = [], ssl = {}, whois = {}, scan_duration = 0.08, ip_address = 'Unavailable', confidence = 95 } = scanResult
+  const {
+    url,
+    score,
+    verdict,
+    results = [],
+    ssl = {},
+    whois = {},
+    scan_duration = 0.08,
+    ip_address = "Unavailable",
+    confidence = 95,
+  } = scanResult;
 
   // Copy result details to clipboard
   const handleCopyResultUrl = () => {
-    const textToCopy = `PhishZero Website Security Report\nURL: ${url}\nVerdict: ${verdict}\nRisk Score: ${score}/100`
-    navigator.clipboard.writeText(textToCopy)
+    const textToCopy = `PhishZero Website Security Report\nURL: ${url}\nVerdict: ${verdict}\nRisk Score: ${score}/100`;
+    navigator.clipboard
+      .writeText(textToCopy)
       .then(() => {
-        toast.success('Report details copied to clipboard!')
+        toast.success("Report details copied to clipboard!");
       })
       .catch(() => {
-        toast.error('Could not copy. Please manually select the text.')
-      })
-  }
+        toast.error("Could not copy. Please manually select the text.");
+      });
+  };
 
   // Trigger PDF download with custom directory picker prompt (Runs picker before fetch to preserve browser user gesture)
   const handleDownloadPdf = async () => {
-    let fileHandle = null
+    let fileHandle = null;
     try {
       // 1. Prompt user for saving location first while user gesture is active
       if (window.showSaveFilePicker) {
         fileHandle = await window.showSaveFilePicker({
           suggestedName: `phishzero_report_${Date.now()}.pdf`,
-          types: [{
-            description: 'PDF Document',
-            accept: {
-              'application/pdf': ['.pdf']
-            }
-          }]
-        })
+          types: [
+            {
+              description: "PDF Document",
+              accept: {
+                "application/pdf": [".pdf"],
+              },
+            },
+          ],
+        });
       }
 
-      toast.info('Generating PDF report from sandbox...')
-      let response
-      let blob
+      toast.info("Generating PDF report from sandbox...");
+      let response;
+      let blob;
       try {
-        const postUrl = `${import.meta.env.VITE_API_URL || ''}/api/report`
+        const postUrl = `${import.meta.env.VITE_API_URL || ""}/api/report`;
         response = await fetch(postUrl, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(scanResult)
-        })
+          body: JSON.stringify(scanResult),
+        });
         if (response.ok) {
-          blob = await response.blob()
+          blob = await response.blob();
         } else {
-          console.warn(`POST report generation returned status ${response.status}. Falling back to GET...`)
+          const errorJson = await response.json().catch(() => null);
+          console.warn(
+            `POST report generation returned status ${response.status}. Falling back to GET...`,
+            errorJson,
+          );
         }
       } catch (postErr) {
-        console.warn('POST report generation failed, trying GET fallback...', postErr)
+        console.warn(
+          "POST report generation failed, trying GET fallback...",
+          postErr,
+        );
       }
 
       if (!blob) {
         // Fallback: GET request with url query parameter (performs rescan on server)
-        const getUrl = `${import.meta.env.VITE_API_URL || ''}/api/report?url=${encodeURIComponent(url)}`
-        response = await fetch(getUrl)
-        if (!response.ok) throw new Error('API server failed to generate PDF')
-        blob = await response.blob()
+        const getUrl = `${import.meta.env.VITE_API_URL || ""}/api/report?url=${encodeURIComponent(url)}`;
+        response = await fetch(getUrl);
+        if (!response.ok) {
+          const errorJson = await response.json().catch(() => null);
+          const serverMessage = errorJson?.error ? `: ${errorJson.error}` : "";
+          throw new Error(`API server failed to generate PDF${serverMessage}`);
+        }
+        blob = await response.blob();
       }
 
       if (fileHandle) {
         // 3. Write blob content to the chosen folder path
-        const writable = await fileHandle.createWritable()
-        await writable.write(blob)
-        await writable.close()
-        toast.success('Report saved successfully!')
+        const writable = await fileHandle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        toast.success("Report saved successfully!");
       } else {
         // Fallback standard download trigger for unsupported browsers
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(blob)
-        link.setAttribute('download', `phishzero_report_${Date.now()}.pdf`)
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
-        toast.success('Report downloaded to default folder.')
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", `phishzero_report_${Date.now()}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        toast.success("Report downloaded to default folder.");
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
       // Check if user simply closed the Save Dialogue without choosing a path
-      if (err.name !== 'AbortError') {
-        toast.error('Failed to download PDF report. Make sure the backend is active.')
+      if (err.name !== "AbortError") {
+        const message = err.message || "Failed to download PDF report.";
+        toast.error(
+          `PDF generation failed. ${message} Make sure the backend is running at http://localhost:5000.`,
+        );
       }
     }
-  }
+  };
 
-  let scoreBgColor = 'bg-safe'
+  let scoreBgColor = "bg-safe";
   if (score >= 70) {
-    scoreBgColor = 'bg-phishing'
+    scoreBgColor = "bg-phishing";
   } else if (score >= 40) {
-    scoreBgColor = 'bg-suspicious'
+    scoreBgColor = "bg-suspicious";
   }
 
   const getRecommendations = () => {
-    if (verdict === 'Phishing') {
+    if (verdict === "Phishing") {
       return [
-        'DO NOT ENTER passwords, credit cards, or logins on this website.',
-        'Avoid downloading any files or software installers from this source.',
-        'Verify the domain name character-by-character to check for homoglyphs.',
-        'Report this website immediately to security authorities or your IT administrator.'
-      ]
-    } else if (verdict === 'Suspicious') {
+        "DO NOT ENTER passwords, credit cards, or logins on this website.",
+        "Avoid downloading any files or software installers from this source.",
+        "Verify the domain name character-by-character to check for homoglyphs.",
+        "Report this website immediately to security authorities or your IT administrator.",
+      ];
+    } else if (verdict === "Suspicious") {
       return [
-        'Exercise high caution before submitting any inputs on this page.',
-        'Confirm the sender or source of this link through a secondary verified channel.',
-        'Check the SSL certificate details for warning messages or recent registrations.'
-      ]
+        "Exercise high caution before submitting any inputs on this page.",
+        "Confirm the sender or source of this link through a secondary verified channel.",
+        "Check the SSL certificate details for warning messages or recent registrations.",
+      ];
     } else {
       return [
-        'This website exhibits standard security indicators. Proceed safely.',
-        'Ensure browser anti-phishing filters are active for general navigation protection.',
-        'Verify sensitive requests (payments, password resets) independently.'
-      ]
+        "This website exhibits standard security indicators. Proceed safely.",
+        "Ensure browser anti-phishing filters are active for general navigation protection.",
+        "Verify sensitive requests (payments, password resets) independently.",
+      ];
     }
-  }
+  };
 
-  const isBrandImpersonation = results.some(r => r.name === 'Brand Impersonation' && r.triggered)
+  const isBrandImpersonation = results.some(
+    (r) => r.name === "Brand Impersonation" && r.triggered,
+  );
 
   return (
     <div className="min-h-screen py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-      
       {/* Top action header bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-muted/20 pb-6">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0d1b2a] dark:text-white">
@@ -191,9 +227,13 @@ export const Result = () => {
         >
           <FiAlertTriangle className="w-6 h-6 text-phishing flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-extrabold text-phishing uppercase tracking-wider">⚠ Possible Brand Impersonation Detected</h4>
+            <h4 className="text-sm font-extrabold text-phishing uppercase tracking-wider">
+              ⚠ Possible Brand Impersonation Detected
+            </h4>
             <p className="text-xs text-muted mt-1 leading-relaxed font-semibold">
-              CRITICAL: This website's address appears to mimic a popular brand (like PayPal or Google) but does not resolve to their official registry domain. This is a common tactic for credential stealing.
+              CRITICAL: This website's address appears to mimic a popular brand
+              (like PayPal or Google) but does not resolve to their official
+              registry domain. This is a common tactic for credential stealing.
             </p>
           </div>
         </motion.div>
@@ -202,36 +242,66 @@ export const Result = () => {
       {/* Scan Summary Dashboard */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
-          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Threat Level</span>
-          <span className={`text-base font-extrabold block mt-2 uppercase ${
-            score >= 70 ? 'text-phishing' : score >= 40 ? 'text-suspicious' : 'text-safe'
-          }`}>
-            {score >= 70 ? 'Danger' : score >= 40 ? 'Warning' : 'Safe'}
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">
+            Threat Level
+          </span>
+          <span
+            className={`text-base font-extrabold block mt-2 uppercase ${
+              score >= 70
+                ? "text-phishing"
+                : score >= 40
+                  ? "text-suspicious"
+                  : "text-safe"
+            }`}
+          >
+            {score >= 70 ? "Danger" : score >= 40 ? "Warning" : "Safe"}
           </span>
         </div>
         <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
-          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Risk Score</span>
-          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">{score} / 100</span>
-        </div>
-        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
-          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Confidence</span>
-          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">{confidence}%</span>
-        </div>
-        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
-          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Scan Duration</span>
-          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">{scan_duration}s</span>
-        </div>
-        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
-          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Domain Age</span>
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">
+            Risk Score
+          </span>
           <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">
-            {whois.age_days !== undefined ? `${whois.age_days}d` : 'N/A'}
+            {score} / 100
+          </span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">
+            Confidence
+          </span>
+          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">
+            {confidence}%
+          </span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">
+            Scan Duration
+          </span>
+          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">
+            {scan_duration}s
+          </span>
+        </div>
+        <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm text-left">
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">
+            Domain Age
+          </span>
+          <span className="text-base font-extrabold text-[#0d1b2a] dark:text-white block mt-2">
+            {whois.age_days !== undefined ? `${whois.age_days}d` : "N/A"}
           </span>
         </div>
         <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm col-span-2 md:col-span-1 text-left">
-          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">Final Verdict</span>
-          <span className={`text-base font-extrabold block mt-2 uppercase ${
-            score >= 70 ? 'text-phishing' : score >= 40 ? 'text-suspicious' : 'text-safe'
-          }`}>
+          <span className="text-[9px] uppercase font-bold text-muted tracking-wider block">
+            Final Verdict
+          </span>
+          <span
+            className={`text-base font-extrabold block mt-2 uppercase ${
+              score >= 70
+                ? "text-phishing"
+                : score >= 40
+                  ? "text-suspicious"
+                  : "text-safe"
+            }`}
+          >
             {verdict}
           </span>
         </div>
@@ -239,7 +309,6 @@ export const Result = () => {
 
       {/* Main Verdict Summary Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-         
         {/* Banner: takes 8 cols */}
         <div className="lg:col-span-8 h-full flex flex-col justify-center">
           <VerdictBanner verdict={verdict} url={url} />
@@ -249,7 +318,6 @@ export const Result = () => {
         <div className="lg:col-span-4 h-full flex items-center justify-center">
           <AnimatedRiskMeter score={score} confidence={confidence} />
         </div>
-
       </div>
 
       {/* Zone slide indicator progress ruler */}
@@ -257,18 +325,19 @@ export const Result = () => {
         <h3 className="text-sm font-extrabold uppercase tracking-wider text-muted">
           Safety Threat Level
         </h3>
-        
+
         {/* Horizontal ruler tracking box */}
         <div className="relative pt-6 pb-2">
-          
           {/* Active pointer block */}
           <motion.div
             initial={{ left: 0 }}
             animate={{ left: `${score}%` }}
-            transition={{ duration: 1, ease: 'easeOut' }}
+            transition={{ duration: 1, ease: "easeOut" }}
             className="absolute top-0 -translate-x-1/2 flex flex-col items-center z-10"
           >
-            <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold text-primary dark:text-primary ${scoreBgColor}`}>
+            <span
+              className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold text-primary dark:text-primary ${scoreBgColor}`}
+            >
               {score}
             </span>
             <div className={`w-2 h-2 rotate-45 mt-0.5 ${scoreBgColor}`} />
@@ -276,9 +345,18 @@ export const Result = () => {
 
           {/* Three-zone background bar */}
           <div className="h-4 w-full rounded-full overflow-hidden flex bg-primary/20">
-            <div className="w-[40%] bg-emerald-500/20 border-r border-[#060b14] h-full" title="Safe Range" />
-            <div className="w-[30%] bg-amber-500/20 border-r border-[#060b14] h-full" title="Suspicious Range" />
-            <div className="w-[30%] bg-rose-500/20 h-full" title="Dangerous Range" />
+            <div
+              className="w-[40%] bg-emerald-500/20 border-r border-[#060b14] h-full"
+              title="Safe Range"
+            />
+            <div
+              className="w-[30%] bg-amber-500/20 border-r border-[#060b14] h-full"
+              title="Suspicious Range"
+            />
+            <div
+              className="w-[30%] bg-rose-500/20 h-full"
+              title="Dangerous Range"
+            />
           </div>
 
           {/* Legend indicator marks */}
@@ -288,7 +366,6 @@ export const Result = () => {
             <span className="text-amber-500">69 (Upper Suspicious Limit)</span>
             <span className="text-rose-500">100 (Max Danger Rating)</span>
           </div>
-
         </div>
       </section>
 
@@ -296,46 +373,70 @@ export const Result = () => {
       <DetectionPipeline />
 
       {/* URL Diagnostics Breakdown Cards */}
-      <UrlBreakdown 
-        url={url} 
-        ipAddress={ip_address} 
-        registrar={whois.registrar} 
-        whoisError={whois.error} 
-        sslError={ssl.error} 
+      <UrlBreakdown
+        url={url}
+        ipAddress={ip_address}
+        registrar={whois.registrar}
+        whoisError={whois.error}
+        sslError={ssl.error}
       />
 
       {/* SSL & WHOIS Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
         {/* SSL block */}
         <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md hover:border-accent/30 transition-colors">
           <div className="flex items-center space-x-2 text-accent border-b border-muted/5 pb-3">
             <FiLock className="w-5 h-5" />
-            <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">SSL Connection & Security</h3>
+            <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">
+              SSL Connection & Security
+            </h3>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4 text-sm text-left">
             <div className="space-y-1">
-              <span className="text-xs text-muted block">Connection Status</span>
-              <span className={`inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                ssl.valid ? 'bg-safe/10 text-safe' : 'bg-phishing/10 text-phishing'
-              }`}>
-                {ssl.valid ? <FiCheckCircle className="w-3.5 h-3.5" /> : <FiAlertTriangle className="w-3.5 h-3.5" />}
-                <span>{ssl.valid ? 'Secure / Encrypted' : 'Not Secure (HTTP)'}</span>
+              <span className="text-xs text-muted block">
+                Connection Status
+              </span>
+              <span
+                className={`inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                  ssl.valid
+                    ? "bg-safe/10 text-safe"
+                    : "bg-phishing/10 text-phishing"
+                }`}
+              >
+                {ssl.valid ? (
+                  <FiCheckCircle className="w-3.5 h-3.5" />
+                ) : (
+                  <FiAlertTriangle className="w-3.5 h-3.5" />
+                )}
+                <span>
+                  {ssl.valid ? "Secure / Encrypted" : "Not Secure (HTTP)"}
+                </span>
               </span>
             </div>
             <div className="space-y-1">
-              <span className="text-xs text-muted block">Certificate Issuer</span>
-              <span className="font-semibold text-[#0d1b2a] dark:text-white truncate block" title={ssl.issuer}>{ssl.issuer || 'None'}</span>
+              <span className="text-xs text-muted block">
+                Certificate Issuer
+              </span>
+              <span
+                className="font-semibold text-[#0d1b2a] dark:text-white truncate block"
+                title={ssl.issuer}
+              >
+                {ssl.issuer || "None"}
+              </span>
             </div>
             <div className="space-y-1">
               <span className="text-xs text-muted block">Expiration Date</span>
-              <span className="font-semibold text-[#0d1b2a] dark:text-white font-mono block">{ssl.expiry_date || 'N/A'}</span>
+              <span className="font-semibold text-[#0d1b2a] dark:text-white font-mono block">
+                {ssl.expiry_date || "N/A"}
+              </span>
             </div>
             <div className="space-y-1">
               <span className="text-xs text-muted block">Days Left</span>
               <span className="font-semibold text-[#0d1b2a] dark:text-white font-mono block">
-                {ssl.days_left !== undefined ? `${ssl.days_left} Days` : '0 Days'}
+                {ssl.days_left !== undefined
+                  ? `${ssl.days_left} Days`
+                  : "0 Days"}
               </span>
             </div>
           </div>
@@ -344,14 +445,19 @@ export const Result = () => {
             <div className="flex items-start space-x-2 p-3 bg-phishing/5 border border-phishing/30 text-phishing rounded-xl text-xs text-left">
               <FiAlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <p className="leading-relaxed">
-                <b>Caution:</b> This site's security certificate is expiring in less than 30 days. Short-lived certificates are frequently used on temporary scam pages.
+                <b>Caution:</b> This site's security certificate is expiring in
+                less than 30 days. Short-lived certificates are frequently used
+                on temporary scam pages.
               </p>
             </div>
           )}
 
           {ssl.error && (
             <div className="p-3 bg-primary/20 text-muted rounded-xl text-[11px] leading-relaxed text-left">
-              <b>Connection Log:</b> {ssl.error === "HTTP protocol used (No SSL)" ? "The website uses plain HTTP, meaning data sent to it is not encrypted." : ssl.error}
+              <b>Connection Log:</b>{" "}
+              {ssl.error === "HTTP protocol used (No SSL)"
+                ? "The website uses plain HTTP, meaning data sent to it is not encrypted."
+                : ssl.error}
             </div>
           )}
         </section>
@@ -360,36 +466,51 @@ export const Result = () => {
         <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-md hover:border-accent/30 transition-colors">
           <div className="flex items-center space-x-2 text-accent border-b border-muted/5 pb-3">
             <FiCalendar className="w-5 h-5" />
-            <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">Domain Registration details</h3>
+            <h3 className="text-base font-bold text-[#0d1b2a] dark:text-white">
+              Domain Registration details
+            </h3>
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-sm text-left">
             <div className="space-y-1">
               <span className="text-xs text-muted block">Website Age</span>
               <span className="font-extrabold text-[#0d1b2a] dark:text-white font-mono block">
-                {whois.age_days !== undefined ? `${whois.age_days} Days` : '0 Days'}
+                {whois.age_days !== undefined
+                  ? `${whois.age_days} Days`
+                  : "0 Days"}
               </span>
             </div>
             <div className="space-y-1">
               <span className="text-xs text-muted block">Registered On</span>
-              <span className="font-semibold text-[#0d1b2a] dark:text-white font-mono block">{whois.creation_date || 'Unknown'}</span>
-            </div>
-            <div className="space-y-1">
-              <span className="text-xs text-muted block">Registration Risk</span>
-              <span className={`inline-flex px-2 py-0.5 rounded text-xs font-bold ${
-                whois.risk_level === 'Very High' || whois.risk_level === 'High'
-                  ? 'bg-phishing/10 text-phishing'
-                  : whois.risk_level === 'Medium'
-                  ? 'bg-suspicious/10 text-suspicious'
-                  : 'bg-safe/10 text-safe'
-              }`}>
-                {whois.risk_level || 'Unknown'}
+              <span className="font-semibold text-[#0d1b2a] dark:text-white font-mono block">
+                {whois.creation_date || "Unknown"}
               </span>
             </div>
             <div className="space-y-1">
-              <span className="text-xs text-muted block">WHOIS Penalty points</span>
+              <span className="text-xs text-muted block">
+                Registration Risk
+              </span>
+              <span
+                className={`inline-flex px-2 py-0.5 rounded text-xs font-bold ${
+                  whois.risk_level === "Very High" ||
+                  whois.risk_level === "High"
+                    ? "bg-phishing/10 text-phishing"
+                    : whois.risk_level === "Medium"
+                      ? "bg-suspicious/10 text-suspicious"
+                      : "bg-safe/10 text-safe"
+                }`}
+              >
+                {whois.risk_level || "Unknown"}
+              </span>
+            </div>
+            <div className="space-y-1">
+              <span className="text-xs text-muted block">
+                WHOIS Penalty points
+              </span>
               <span className="font-semibold text-[#0d1b2a] dark:text-white font-mono block">
-                {whois.points !== undefined ? `+${whois.points} Points` : '0 Points'}
+                {whois.points !== undefined
+                  ? `+${whois.points} Points`
+                  : "0 Points"}
               </span>
             </div>
           </div>
@@ -398,18 +519,20 @@ export const Result = () => {
             <div className="flex items-start space-x-2 p-3 bg-suspicious/5 border border-suspicious/30 text-suspicious rounded-xl text-xs text-left">
               <FiAlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <p className="leading-relaxed">
-                <b>Caution:</b> This website was registered very recently. Scam sites are often created, used for a few days, and then abandoned.
+                <b>Caution:</b> This website was registered very recently. Scam
+                sites are often created, used for a few days, and then
+                abandoned.
               </p>
             </div>
           )}
 
           {whois.error && (
             <div className="p-3 bg-primary/20 text-muted rounded-xl text-[11px] leading-relaxed text-left">
-              <b>Registry Log:</b> Could not pull database logs (this often happens when WHOIS servers rate-limit requests).
+              <b>Registry Log:</b> Could not pull database logs (this often
+              happens when WHOIS servers rate-limit requests).
             </div>
           )}
         </section>
-
       </div>
 
       {/* Security Checklist Table */}
@@ -423,10 +546,15 @@ export const Result = () => {
 
       {/* Dynamic Security Recommendations */}
       <div className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-3xl p-6 shadow-md text-left space-y-4">
-        <h3 className="text-sm font-extrabold uppercase tracking-wider text-muted">Cybersecurity Recommendations</h3>
+        <h3 className="text-sm font-extrabold uppercase tracking-wider text-muted">
+          Cybersecurity Recommendations
+        </h3>
         <ul className="space-y-3 text-xs">
           {getRecommendations().map((rec, idx) => (
-            <li key={idx} className="flex items-start space-x-2 text-muted font-semibold">
+            <li
+              key={idx}
+              className="flex items-start space-x-2 text-muted font-semibold"
+            >
               <span className="text-accent font-extrabold">&#9656;</span>
               <span>{rec}</span>
             </li>
@@ -443,7 +571,10 @@ export const Result = () => {
           <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white text-left">
             Raw Heuristic Signal Cards
           </h2>
-          <p className="text-xs text-muted text-left">A detailed look at the 13 safety checks we run on the link structure.</p>
+          <p className="text-xs text-muted text-left">
+            A detailed look at the 13 safety checks we run on the link
+            structure.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -452,8 +583,7 @@ export const Result = () => {
           ))}
         </div>
       </section>
-
     </div>
-  )
-}
-export default Result
+  );
+};
+export default Result;

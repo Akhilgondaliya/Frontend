@@ -153,7 +153,7 @@ export const Result = () => {
 
       {/* Main Verdict Summary Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        
+         
         {/* Banner: takes 8 cols */}
         <div className="lg:col-span-8 h-full flex flex-col justify-center">
           <VerdictBanner verdict={verdict} url={url} />

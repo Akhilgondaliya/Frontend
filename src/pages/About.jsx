@@ -232,7 +232,7 @@ export const About = () => {
             </p>
             
             <p className="text-xs text-muted leading-relaxed font-semibold">
-              Computer Engineering student focused on building secure web applications, identifying vulnerabilities, and coding threat heuristics. Built as a hands-on cybersecurity project under the IBM CSRBOX Cybersecurity Internship 2026.
+              Computer Engineering student focused on developing threat heuristics, identifying web vulnerabilities, and analyzing attack vectors. Built as a core cybersecurity project under the IBM CSRBOX Cybersecurity Internship 2026.
             </p>
             
             <a href="mailto:akhilgondaliya30@gmail.com" className="inline-flex items-center space-x-1.5 text-xs text-muted hover:text-accent font-mono font-semibold transition-colors">

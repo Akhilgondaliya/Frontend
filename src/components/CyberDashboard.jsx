@@ -1,70 +1,73 @@
-import React, { useState, useEffect } from 'react'
-import { FiTrendingUp, FiActivity, FiShield, FiFileText, FiPercent } from 'react-icons/fi'
+import React, { useState, useEffect } from "react";
+import {
+  FiTrendingUp,
+  FiActivity,
+  FiShield,
+  FiFileText,
+  FiPercent,
+} from "react-icons/fi";
+import { useGetStatsQuery } from "../app/apiSlice";
 
 export const CyberDashboard = () => {
-  const [stats, setStats] = useState({
-    today_scans: 124,
-    threats_detected: 42,
-    safe_urls: 82,
-    qr_scans: 15,
-    average_risk_score: 38.0
-  })
-  
+  const {
+    data: stats = {
+      today_scans: 0,
+      threats_detected: 0,
+      safe_urls: 0,
+      qr_scans: 0,
+      average_risk_score: 0.0,
+    },
+    isFetching,
+  } = useGetStatsQuery(undefined, {
+    pollingInterval: 8000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+
   const [counts, setCounts] = useState({
     today_scans: 0,
     threats_detected: 0,
     safe_urls: 0,
     qr_scans: 0,
-    average_risk_score: 0.0
-  })
+    average_risk_score: 0.0,
+  });
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/stats`)
-        if (response.ok) {
-          const data = await response.json()
-          setStats(data)
-        }
-      } catch (err) {
-        console.error("Failed to load statistics:", err)
-      }
-    }
-    fetchStats()
-  }, [])
+    const duration = 1000;
+    const steps = 60;
+    const stepTime = duration / steps;
 
-  useEffect(() => {
-    const duration = 1000
-    const steps = 60
-    const stepTime = duration / steps
-    
-    let step = 0
+    let step = 0;
     const timer = setInterval(() => {
-      step++
+      step++;
       if (step >= steps) {
-        setCounts(stats)
-        clearInterval(timer)
+        setCounts(stats);
+        clearInterval(timer);
       } else {
-        const factor = step / steps
+        const factor = step / steps;
         setCounts({
           today_scans: Math.floor(stats.today_scans * factor),
           threats_detected: Math.floor(stats.threats_detected * factor),
           safe_urls: Math.floor(stats.safe_urls * factor),
           qr_scans: Math.floor(stats.qr_scans * factor),
-          average_risk_score: parseFloat((stats.average_risk_score * factor).toFixed(1))
-        })
+          average_risk_score: parseFloat(
+            (stats.average_risk_score * factor).toFixed(1),
+          ),
+        });
       }
-    }, stepTime)
+    }, stepTime);
 
-    return () => clearInterval(timer)
-  }, [stats])
+    return () => clearInterval(timer);
+  }, [stats]);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 py-6 w-full">
       {/* Total Scans */}
       <div className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between hover:border-accent/30 transition-all duration-300 shadow-md">
         <div className="flex items-center justify-between text-muted">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider">Total Scans</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider">
+            Total Scans
+          </span>
           <FiActivity className="w-4 h-4 text-accent animate-pulse" />
         </div>
         <div className="mt-2">
@@ -77,7 +80,9 @@ export const CyberDashboard = () => {
       {/* Threats Detected */}
       <div className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between hover:border-accent/30 transition-all duration-300 shadow-md">
         <div className="flex items-center justify-between text-muted">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider">Threats Detected</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider">
+            Threats Detected
+          </span>
           <FiTrendingUp className="w-4 h-4 text-phishing" />
         </div>
         <div className="mt-2">
@@ -90,7 +95,9 @@ export const CyberDashboard = () => {
       {/* Safe URLs */}
       <div className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between hover:border-accent/30 transition-all duration-300 shadow-md">
         <div className="flex items-center justify-between text-muted">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider">Safe Elements</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider">
+            Safe Elements
+          </span>
           <FiShield className="w-4 h-4 text-safe" />
         </div>
         <div className="mt-2">
@@ -103,7 +110,9 @@ export const CyberDashboard = () => {
       {/* QR Scans */}
       <div className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between hover:border-accent/30 transition-all duration-300 shadow-md">
         <div className="flex items-center justify-between text-muted">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider">QR Vect Audits</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider">
+            QR Vect Audits
+          </span>
           <FiFileText className="w-4 h-4 text-accent" />
         </div>
         <div className="mt-2">
@@ -116,7 +125,9 @@ export const CyberDashboard = () => {
       {/* Average Risk Score */}
       <div className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-2xl p-4 flex flex-col justify-between hover:border-accent/30 transition-all duration-300 shadow-md col-span-2 md:col-span-1">
         <div className="flex items-center justify-between text-muted">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider">Avg Risk Score</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider">
+            Avg Risk Score
+          </span>
           <FiPercent className="w-4 h-4 text-accent" />
         </div>
         <div className="mt-2">
@@ -126,7 +137,7 @@ export const CyberDashboard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CyberDashboard
+export default CyberDashboard;

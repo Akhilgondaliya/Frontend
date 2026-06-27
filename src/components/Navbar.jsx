@@ -100,7 +100,7 @@ export const Navbar = () => {
                 to="/scan"
                 className="hidden lg:flex items-center space-x-1 px-4 py-2 rounded-xl bg-accent hover:bg-accent/80 text-white dark:text-slate-950 font-extrabold text-xs tracking-wider transition-all shadow-md shadow-accent/20 hover:scale-105 active:scale-95 cursor-pointer ml-2"
               >
-                <span>Try Now</span>
+                <span>Start Free Scan</span>
                 <span className="font-sans">→</span>
               </Link>
             </nav>

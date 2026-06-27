@@ -52,8 +52,8 @@ export const Navbar = () => {
       <header
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b ${
           scrolled
-            ? 'bg-primary/80 dark:bg-primary/80 backdrop-blur-md shadow-lg border-muted/20'
-            : 'bg-transparent border-muted/10'
+            ? 'bg-nav/95 backdrop-blur-md shadow-lg border-muted/20'
+            : 'bg-nav/50 border-muted/10'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +62,7 @@ export const Navbar = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group focus:outline-none" id="navbar-logo">
               <FiShield className="w-6 h-6 text-accent transition-transform duration-300 group-hover:scale-110" />
-              <span className="text-xl font-extrabold tracking-tight text-[#0d1b2a] dark:text-white">
+              <span className="text-xl font-extrabold tracking-tight text-white">
                 Phish<span className="text-accent">Zero</span>
               </span>
             </Link>
@@ -77,7 +77,7 @@ export const Navbar = () => {
                     `relative py-2 text-sm font-semibold tracking-wide transition-colors duration-300 ${
                       isActive
                         ? 'text-accent font-bold'
-                        : 'text-muted dark:text-muted hover:text-accent dark:hover:text-accent'
+                        : 'text-gray-300 hover:text-accent dark:text-muted dark:hover:text-accent'
                     }`
                   }
                 >
@@ -110,7 +110,7 @@ export const Navbar = () => {
               <ThemeToggle />
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 text-muted dark:text-muted hover:text-accent dark:hover:text-accent focus:outline-none cursor-pointer"
+                className="p-2 text-gray-300 dark:text-muted hover:text-accent dark:hover:text-accent focus:outline-none cursor-pointer"
                 aria-label="Toggle Menu"
               >
                 {isOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
@@ -123,7 +123,7 @@ export const Navbar = () => {
   
       {/* Mobile Drawer Overlay */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-16 sm:top-20 bg-primary/80 dark:bg-primary/80 backdrop-blur-xl z-40 transition-all duration-300 border-t border-muted/10">
+        <div className="md:hidden fixed inset-0 top-16 sm:top-20 bg-nav/95 backdrop-blur-xl z-40 transition-all duration-300 border-t border-muted/10">
           <nav className="flex flex-col space-y-4 px-6 pt-8 pb-10">
             {links.map((link) => (
               <NavLink
@@ -131,7 +131,7 @@ export const Navbar = () => {
                 to={link.path}
                 className={({ isActive }) =>
                   `text-lg font-bold py-2 border-b border-muted/10 transition-colors duration-300 ${
-                    isActive ? 'text-accent border-accent/20' : 'text-muted dark:text-muted hover:text-accent'
+                    isActive ? 'text-accent border-accent/20' : 'text-gray-300 dark:text-muted hover:text-accent'
                   }`
                 }
               >
@@ -152,4 +152,5 @@ export const Navbar = () => {
     </>
   )
 }
+
 export default Navbar

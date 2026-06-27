@@ -8,6 +8,7 @@
   --color-accent: 2 132 199;    /* High-contrast sky-600 blue for light mode */
   --color-muted: 71 85 105;     /* Darker slate-600 for better light mode readability */
   --color-safe: 22 163 74;      /* Green-600 for optimal contrast and friendliness in light mode */
+  --color-nav: 15 23 42;        /* NEW: Dark slate-900 for the navbar in light mode */
 }
 
 .dark {
@@ -16,6 +17,7 @@
   --color-accent: 0 212 255;    /* Neon light blue for dark mode */
   --color-muted: 122 154 181;   /* Original soft blue-gray muted text for dark mode */
   --color-safe: 0 255 136;      /* Neon green for dark mode */
+  --color-nav: 13 27 42;        /* NEW: Matches your dark mode card background */
 }
 
 @layer base {
@@ -195,4 +197,3 @@
 .Toastify__progress-bar--warning {
   background: linear-gradient(to right, #ffaa00, #ff4a4a) !important;
 }
-

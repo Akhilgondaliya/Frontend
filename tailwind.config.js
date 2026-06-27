@@ -15,6 +15,7 @@ export default {
         suspicious: '#ffcc00',
         phishing: '#ff4444',
         muted: 'rgb(var(--color-muted) / <alpha-value>)',
+        nav: 'rgb(var(--color-nav) / <alpha-value>)',
       }
     },
   },

@@ -280,7 +280,7 @@ export const Home = () => {
       </section>
 
       {/* Subtle Divider Line */}
-      <hr className="border-t border-muted/20 max-w-7xl mx-auto" />
+      <div className="h-[1px] w-full max-w-7xl mx-auto bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
       {/* Phishing Stats Section */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">

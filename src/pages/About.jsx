@@ -83,8 +83,7 @@ export const About = () => {
     { label: 'Detection Modules', val: '6', suffix: '' },
     { label: 'QR Scanner Accuracy', val: '100', suffix: '%' },
     { label: 'PDF Report Layouts', val: '1', suffix: '' },
-    { label: 'Responsive Pages', val: '8', suffix: '' },
-    { label: 'GitHub Commits', val: '74', suffix: '+' }
+    { label: 'Responsive Pages', val: '8', suffix: '' }
   ]
 
   const containerVariants = {
@@ -224,7 +223,7 @@ export const About = () => {
               <h3 className="text-xl font-bold text-[#0d1b2a] dark:text-white">Akhil Gondaliya</h3>
               <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-accent/10 border border-accent/20 text-[10px] font-bold text-accent uppercase tracking-wide self-center sm:self-auto">
                 <FiAward className="w-3.5 h-3.5" />
-                <span>Developer & Cybersecurity Intern</span>
+                <span>Student & Intern</span>
               </span>
             </div>
             
@@ -271,7 +270,7 @@ export const About = () => {
           <h2 className="text-xl font-bold text-[#0d1b2a] dark:text-white">Project Statistics</h2>
           <p className="text-xs text-muted">Quantifying the code scale and diagnostics tests loaded.</p>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {stats.map((stat, idx) => (
             <StatCard key={idx} label={stat.label} endVal={stat.val} suffix={stat.suffix} />
           ))}

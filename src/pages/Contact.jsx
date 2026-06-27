@@ -171,20 +171,6 @@ export const Contact = () => {
             </div>
           </section>
 
-          {/* Technical Skills */}
-          <section className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 space-y-4 shadow-xl text-left">
-            <h3 className="text-sm font-extrabold uppercase tracking-widest text-[#0d1b2a] dark:text-white">Technical Skills</h3>
-            <div className="flex flex-wrap gap-2">
-              {[
-                'Python', 'React', 'Flask', 'Tailwind CSS', 'Cybersecurity', 'Networking', 'Machine Learning', 'Linux', 'Git', 'GitHub'
-              ].map((skill, idx) => (
-                <span key={idx} className="px-3 py-1.5 bg-accent/5 border border-accent/10 hover:border-accent/30 rounded-xl text-[10px] font-extrabold text-accent select-none cursor-default transition-all duration-300">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </section>
-
           {/* Response Time */}
           <section className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-3xl p-5 flex items-center justify-between shadow-xl">
             <div className="flex items-center space-x-3">
@@ -199,7 +185,7 @@ export const Contact = () => {
           {/* Quick Links */}
           <section className="bg-card/65 dark:bg-card/45 border border-muted/20 dark:border-accent/10 rounded-3xl p-6 space-y-4 shadow-xl text-left">
             <h3 className="text-sm font-extrabold uppercase tracking-widest text-[#0d1b2a] dark:text-white">Quick Links</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <a href="https://github.com/Akhilgondaliya" target="_blank" rel="noreferrer" className="flex items-center justify-center space-x-2 p-2.5 rounded-xl border border-muted/20 hover:border-accent/30 bg-card/40 text-muted hover:text-accent font-bold text-xs transition-colors">
                 <FiGithub className="w-4 h-4 text-accent" />
                 <span>GitHub</span>
@@ -207,10 +193,6 @@ export const Contact = () => {
               <a href="https://www.linkedin.com/in/akhil-gondaliya" target="_blank" rel="noreferrer" className="flex items-center justify-center space-x-2 p-2.5 rounded-xl border border-muted/20 hover:border-accent/30 bg-card/40 text-muted hover:text-accent font-bold text-xs transition-colors">
                 <FiLinkedin className="w-4 h-4 text-accent" />
                 <span>LinkedIn</span>
-              </a>
-              <a href="https://github.com/Akhilgondaliya/PhishZero" target="_blank" rel="noreferrer" className="flex items-center justify-center space-x-2 p-2.5 rounded-xl border border-muted/20 hover:border-accent/30 bg-card/40 text-muted hover:text-accent font-bold text-xs transition-colors">
-                <FiGlobe className="w-4 h-4 text-accent" />
-                <span>Portfolio</span>
               </a>
               <a href="mailto:akhilgondaliya30@gmail.com" className="flex items-center justify-center space-x-2 p-2.5 rounded-xl border border-muted/20 hover:border-accent/30 bg-card/40 text-muted hover:text-accent font-bold text-xs transition-colors">
                 <FiMail className="w-4 h-4 text-accent" />

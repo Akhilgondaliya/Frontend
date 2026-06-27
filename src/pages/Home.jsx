@@ -279,6 +279,9 @@ export const Home = () => {
         </div>
       </section>
 
+      {/* Subtle Divider Line */}
+      <hr className="border-t border-muted/20 max-w-7xl mx-auto" />
+
       {/* Phishing Stats Section */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-4">

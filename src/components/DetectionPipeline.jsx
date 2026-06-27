@@ -26,8 +26,8 @@ export const DetectionPipeline = () => {
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } }
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } }
   }
 
   return (
@@ -39,7 +39,7 @@ export const DetectionPipeline = () => {
         animate="visible"
         className="bg-card/65 dark:bg-card/45 backdrop-blur-md border border-muted/20 dark:border-accent/10 rounded-3xl p-6 shadow-md"
       >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 overflow-x-auto pb-2">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-4">
           {steps.map((step, idx) => (
             <React.Fragment key={idx}>
               {/* Step item */}
@@ -58,7 +58,7 @@ export const DetectionPipeline = () => {
 
               {/* Connecting line */}
               {idx < steps.length - 1 && (
-                <div className="hidden md:block w-full min-w-[20px] h-[1px] bg-gradient-to-r from-safe to-safe/40 self-center flex-1" />
+                <div className="w-6 h-[1px] bg-gradient-to-r from-safe to-safe/40 self-center shrink-0" />
               )}
             </React.Fragment>
           ))}

@@ -279,9 +279,6 @@ export const About = () => {
         </div>
       </section>
 
-      {/* Rate Us ⭐ Section */}
-      <RateUsCard />
-
       {/* Academic Disclaimer */}
       <div className="p-4 rounded-xl border border-muted/20 dark:border-accent/5 text-center bg-card/40 dark:bg-card/25 backdrop-blur-sm text-xs text-muted font-semibold">
         ⚠️ <b>Internship Notice:</b> Developed as part of IBM CSRBOX Cybersecurity Internship 2026. All sandboxed audits are simulated.
